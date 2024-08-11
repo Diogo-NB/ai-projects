@@ -29,16 +29,16 @@ public class PixelGrid extends JPanel {
         return pixels[row][col].getBackground().equals(Color.WHITE) ? 1 : -1;
     }
 
-    public int[][] getGridRepresentation() {
-        int[][] gridRepresentation = new int[10][10];
+    public int[][] getGridData() {
+        int[][] gridData = new int[10][10];
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                gridRepresentation[i][j] = getPixelValue(i, j);
+                gridData[i][j] = getPixelValue(i, j);
             }
         }
 
-        return gridRepresentation;
+        return gridData;
     }
 
     public void resetGrid() {
