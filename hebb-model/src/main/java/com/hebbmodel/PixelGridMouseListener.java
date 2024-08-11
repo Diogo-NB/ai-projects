@@ -8,39 +8,36 @@ import javax.swing.JPanel;
 public class PixelGridMouseListener extends MouseAdapter {
 
     private boolean isPressed = false;
-    private Color currentColor = Color.WHITE;
-
-    private void togglePixelColor(JPanel pixel) {
-        if (currentColor == null) {
-            currentColor = pixel.getBackground();
-        }
-
-        Color newColor = currentColor.equals(Color.WHITE) ? Color.BLACK : Color.WHITE;
-
-        pixel.setBackground(newColor);
-    }
+    private Color lastColorSet;
 
     @Override
     public void mousePressed(MouseEvent e) {
-        super.mousePressed(e);
         isPressed = true;
-
         JPanel pixel = (JPanel) e.getSource();
-        togglePixelColor(pixel);
+
+        boolean isRightClick = e.getButton() == MouseEvent.BUTTON3;
+
+        if (isRightClick) {
+            pixel.setBackground(Color.WHITE);
+            lastColorSet = Color.WHITE;
+        } else if (lastColorSet == null) {
+            pixel.setBackground(Color.BLACK);
+            lastColorSet = Color.BLACK;
+        } else {
+            pixel.setBackground(lastColorSet);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        super.mouseReleased(e);
-        currentColor = null;
         isPressed = false;
+        lastColorSet = null;
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
         if (isPressed) {
-            JPanel pixel = (JPanel) e.getSource();
-            togglePixelColor(pixel);
+            mousePressed(e);
         }
     }
 }
