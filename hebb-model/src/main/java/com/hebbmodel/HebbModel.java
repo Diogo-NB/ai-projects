@@ -5,14 +5,14 @@ public class HebbModel {
     // Pesos
     private float[] weigths;
     // Bias
-    private float b = 0.0f;
+    private float bias = 0.0f;
 
     public HebbModel(int size) {
         if (size < 0) {
             throw new IllegalArgumentException("Tamanho inválido!");
         }
 
-        // Inicializando os pesos
+        // Initialize weigths arrays
         weigths = new float[size];
         for (int i = 0; i < weigths.length; i++) {
             weigths[i] = 0.0f;
@@ -26,19 +26,19 @@ public class HebbModel {
         for (float weight : weigths) {
             sb.append(weight).append(" ");
         }
-        sb.append("\nBias: ").append(b);
+        sb.append("\nBias: ").append(bias);
         return sb.toString();
     }
 
-    public float getB() {
-        return b;
+    public float getBias() {
+        return bias;
     }
 
     public float[] getWeigths() {
         return weigths.clone();
     }
 
-    // Treina o modelo com apenas um vetor de input
+    // Train the model with a single input array
     public void train(int[] input, int expectedOutput) {
         if (input.length != weigths.length) {
             throw new IllegalArgumentException("Tamanho inválido!");
@@ -54,11 +54,11 @@ public class HebbModel {
             weigths[j] += deltaW;
         }
 
-        b += expectedOutput;
+        bias += expectedOutput;
 
     }
 
-    // Treina o modelo com múltiplos inputs
+    // Trains the model with multiple inputs arrays
     public void train(int[][] inputs, int[] expectedOutputs) throws IllegalArgumentException {
         if (inputs.length != expectedOutputs.length || inputs[0].length != weigths.length) {
             throw new IllegalArgumentException("Tamanho inválido!");
@@ -69,14 +69,15 @@ public class HebbModel {
         }
     }
 
+    // Test the model
     public float test(int[] array) {
-        float sum = 0.0f;
+        float result = 0.0f;
 
         for (int j = 0; j < weigths.length; j++) {
-            sum += array[j] * weigths[j];
+            result += array[j] * weigths[j];
         }
-        sum += b;
-        return sum;
+        result += bias;
+        return result;
     }
 
 }
