@@ -17,10 +17,10 @@ public class Main extends JFrame {
         JPanel gridsPanel = new JPanel();
         gridsPanel.setLayout(new GridLayout(1, 2, 10, 0));
 
-        PixelGrid grid1 = new PixelGrid();
+        PixelGrid grid1 = new PixelGrid("Grid #1");
         gridsPanel.add(grid1);
 
-        PixelGrid grid2 = new PixelGrid();
+        PixelGrid grid2 = new PixelGrid("Grid #2");
         gridsPanel.add(grid2);
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
@@ -32,7 +32,8 @@ public class Main extends JFrame {
             int[][] grid1Data = grid1.getGridData();
             int[][] grid2Data = grid2.getGridData();
 
-            new TestingFrame(grid1Data, grid2Data);
+            JFrame testingFrame = new TestingFrame(grid1Data, grid2Data);
+            testingFrame.setVisible(true);
         });
 
         JPanel buttonPanel = new JPanel();

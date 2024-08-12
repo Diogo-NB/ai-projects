@@ -8,7 +8,16 @@ public class PixelGrid extends JPanel {
     private JPanel[][] pixels = new JPanel[10][10]; // 2D array to store pixel panels
 
     public PixelGrid() {
-        setLayout(new GridLayout(10, 10));
+        this("");
+    }
+
+    public PixelGrid(String label) {
+        super();
+        add(new JLabel(label));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        JPanel grid = new JPanel();
+        grid.setLayout(new GridLayout(10, 10));
         MouseListener listener = new PixelGridMouseListener();
 
         for (int i = 0; i < 10; i++) {
@@ -19,10 +28,18 @@ public class PixelGrid extends JPanel {
 
                 pixel.addMouseListener(listener);
 
-                add(pixel);
-                pixels[i][j] = pixel; // Store the pixel panel in the array
+                grid.add(pixel);
+                pixels[i][j] = pixel;
             }
         }
+
+        add(grid);
+        JButton clearButton = new JButton("Clear");
+        clearButton.addActionListener(e -> {
+            clearGrid();
+        });
+
+        add(clearButton, BorderLayout.EAST);
     }
 
     public int getPixelValue(int row, int col) {
@@ -41,7 +58,7 @@ public class PixelGrid extends JPanel {
         return gridData;
     }
 
-    public void resetGrid() {
+    public void clearGrid() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 pixels[i][j].setBackground(Color.WHITE);

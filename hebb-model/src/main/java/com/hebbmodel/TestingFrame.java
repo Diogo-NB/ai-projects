@@ -9,7 +9,6 @@ public class TestingFrame extends JFrame {
         setTitle("Test model");
         setSize(800, 600);
         setResizable(false);
-        setVisible(true);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -17,7 +16,7 @@ public class TestingFrame extends JFrame {
         JPanel gridsPanel = new JPanel();
         gridsPanel.setLayout(new GridLayout(1, 2, 10, 0));
 
-        PixelGrid testGrid = new PixelGrid();
+        PixelGrid testGrid = new PixelGrid("Test grid");
         gridsPanel.add(testGrid);
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
