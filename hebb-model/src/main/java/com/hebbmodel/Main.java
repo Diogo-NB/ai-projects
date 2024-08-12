@@ -25,7 +25,11 @@ public class Main extends JFrame {
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
 
-        JButton trainButton = new JButton("Next");
+        // Create the button with text
+        JButton trainButton = new JButton("Train model & Continue");
+        trainButton.setHorizontalTextPosition(SwingConstants.LEFT);
+        trainButton.setIcon(UIManager.getIcon("ComboBox.buttonArrowIcon"));
+
         trainButton.addActionListener(e -> {
 
             // Gets the data representations of both grids

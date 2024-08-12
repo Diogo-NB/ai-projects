@@ -7,7 +7,7 @@ public class TestingFrame extends JFrame {
 
     public TestingFrame(int[][] grid1Data, int[][] grid2Data) {
         setTitle("Test model");
-        setSize(800, 600);
+        setSize(600, 600);
         setResizable(false);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
