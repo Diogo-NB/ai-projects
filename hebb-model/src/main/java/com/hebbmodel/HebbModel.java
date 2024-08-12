@@ -69,19 +69,14 @@ public class HebbModel {
         }
     }
 
-    public void test(int[] array) {
+    public float test(int[] array) {
         float sum = 0.0f;
 
         for (int j = 0; j < weigths.length; j++) {
             sum += array[j] * weigths[j];
         }
         sum += b;
-        System.out.println("sum = " + sum);
-        if (sum >= 0) {
-            System.out.println("Output: 1");
-        } else {
-            System.out.println("Output: -1");
-        }
+        return sum;
     }
 
 }
