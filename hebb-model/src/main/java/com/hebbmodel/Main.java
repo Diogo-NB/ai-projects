@@ -28,7 +28,7 @@ public class Main extends JFrame {
         JButton trainButton = new JButton("Next");
         trainButton.addActionListener(e -> {
 
-            // Obtém a representação em matriz dos grids
+            // Gets the data representations of both grids
             int[][] grid1Data = grid1.getGridData();
             int[][] grid2Data = grid2.getGridData();
 
