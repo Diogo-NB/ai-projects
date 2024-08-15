@@ -21,13 +21,7 @@ public class HebbModel {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Weights: ");
-        for (float weight : weigths) {
-            sb.append(weight).append(" ");
-        }
-        sb.append("\nBias: ").append(bias);
-        return sb.toString();
+        return "HebbModel";
     }
 
     public float getBias() {
