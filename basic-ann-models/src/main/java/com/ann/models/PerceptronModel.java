@@ -9,6 +9,9 @@ public class PerceptronModel implements ANNModel {
 
     private float learningRate = 0.1f;
 
+    /**
+     * @param size size of the model
+     */
     public PerceptronModel(int size) {
         if (size < 0) {
             throw new IllegalArgumentException("Tamanho inválido!");
@@ -20,27 +23,18 @@ public class PerceptronModel implements ANNModel {
         }
     }
 
+    /**
+     * @param size         size of the model
+     * @param learningRate learning rate of the model
+     */
     public PerceptronModel(int size, float learningRate) {
         this(size);
         this.learningRate = learningRate;
     }
 
     @Override
-    public void train(int[] input, int expectedOutput) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'train'");
-    }
-
-    @Override
-    public void train(int[][] inputs, int[] expectedOutputs) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'train'");
-    }
-
-    @Override
-    public float test(int[] array) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'test'");
+    public String toString() {
+        return "Perceptron Model";
     }
 
     public float[] getWeigths() {
@@ -55,8 +49,36 @@ public class PerceptronModel implements ANNModel {
         return learningRate;
     }
 
-    @Override
-    public String toString() {
-        return "Single Layer Perceptron Model";
+    public void train(int[] input, int expectedOutput) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'train'");
     }
+
+    public void train(int[][] inputs, int[] expectedOutputs) {
+        if (inputs.length != expectedOutputs.length || inputs[0].length != weigths.length) {
+            throw new IllegalArgumentException("Tamanho inválido!");
+        }
+
+        for (int i = 0; i < inputs.length; i++) {
+            train(inputs[i], expectedOutputs[i]);
+        }
+    }
+
+    public float test(int[] array) {
+        float result = 0.0f;
+
+        for (int j = 0; j < weigths.length; j++) {
+            result += array[j] * weigths[j];
+        }
+        result += bias;
+        return result;
+    }
+
+    public void reset() {
+        for (int i = 0; i < weigths.length; i++) {
+            weigths[i] = 0.0f;
+        }
+        bias = 0.0f;
+    }
+
 }

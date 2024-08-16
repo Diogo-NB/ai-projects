@@ -3,17 +3,20 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
-import com.ann.models.HebbModel;
+import com.ann.models.ANNModel;
 import com.ann.util.CollectionsUtil;
 
 public class TestingFrame extends JFrame {
 
-    private HebbModel model;
+    private ANNModel model;
     private PixelGrid testGrid;
     private JPanel resultsPanel;
     private int resultIndex = 0;
 
-    public TestingFrame(HebbModel model) {
+    /**
+     * @model the model to be tested
+     */
+    public TestingFrame(ANNModel model) {
         this.model = model;
         setTitle("Test model");
         setSize(620, 600);

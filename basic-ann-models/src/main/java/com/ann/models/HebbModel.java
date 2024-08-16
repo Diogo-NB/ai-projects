@@ -7,6 +7,9 @@ public class HebbModel implements ANNModel {
     // Bias
     private float bias = 0.0f;
 
+    /**
+     * @param size size of the model
+     */
     public HebbModel(int size) {
         if (size < 0) {
             throw new IllegalArgumentException("Tamanho inválido!");
@@ -62,7 +65,6 @@ public class HebbModel implements ANNModel {
         }
     }
 
-    // Test the model
     public float test(int[] array) {
         float result = 0.0f;
 
@@ -71,6 +73,13 @@ public class HebbModel implements ANNModel {
         }
         result += bias;
         return result;
+    }
+
+    public void reset() {
+        for (int i = 0; i < weigths.length; i++) {
+            weigths[i] = 0.0f;
+        }
+        bias = 0.0f;
     }
 
 }

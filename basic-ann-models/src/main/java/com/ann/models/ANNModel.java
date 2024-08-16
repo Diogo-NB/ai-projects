@@ -6,6 +6,8 @@ public interface ANNModel {
 
     void train(int[][] inputs, int[] expectedOutputs);
 
-    public float test(int[] array);
+    float test(int[] array);
+
+    void reset();
 
 }

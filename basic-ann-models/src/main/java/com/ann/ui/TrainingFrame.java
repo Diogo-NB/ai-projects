@@ -3,7 +3,9 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import com.ann.models.ANNModel;
 import com.ann.models.HebbModel;
+import com.ann.models.PerceptronModel;
 import com.ann.util.CollectionsUtil;
 
 public class TrainingFrame extends JFrame {
@@ -27,14 +29,19 @@ public class TrainingFrame extends JFrame {
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
 
+        ANNModel[] models = new ANNModel[] { new PerceptronModel(100), new HebbModel(100) };
+        JComboBox<ANNModel> comboBox = new JComboBox<>(models);
+        comboBox.setSelectedIndex(0);
+
         JButton trainButton = new JButton("Train model & Continue");
         trainButton.addActionListener(e -> {
             // Gets the data representations of both grids
             int[][] grid1Data = grid1.getGridData();
             int[][] grid2Data = grid2.getGridData();
 
-            // Creates an object that represents the Hebbian model
-            HebbModel model = new HebbModel(100);
+            // Get the selected model
+            ANNModel model = (ANNModel) comboBox.getSelectedItem();
+            model.reset();
 
             int[][] inputs = new int[2][100]; // training input arrays
 
@@ -56,8 +63,6 @@ public class TrainingFrame extends JFrame {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         buttonPanel.add(trainButton);
 
-        HebbModel[] models = new HebbModel[] { new HebbModel(10), new HebbModel(10) };
-        JComboBox<HebbModel> comboBox = new JComboBox<>(models);
         buttonPanel.add(comboBox);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
