@@ -2,10 +2,10 @@ package com.hebbmodel;
 
 public interface ANNModel {
 
-    void train(float[] input, float expectedOutput);
+    void train(int[] input, int expectedOutput);
 
-    void train(float[][] inputs, float[] expectedOutputs);
+    void train(int[][] inputs, int[] expectedOutputs);
 
-    float test(float[] array);
+    public float test(int[] array);
 
 }

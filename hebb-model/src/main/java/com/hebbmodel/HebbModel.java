@@ -1,6 +1,6 @@
 package com.hebbmodel;
 
-public class HebbModel {
+public class HebbModel implements ANNModel {
 
     // Pesos
     private float[] weigths;
@@ -12,7 +12,6 @@ public class HebbModel {
             throw new IllegalArgumentException("Tamanho inválido!");
         }
 
-        // Initialize weigths arrays
         weigths = new float[size];
         for (int i = 0; i < weigths.length; i++) {
             weigths[i] = 0.0f;
@@ -21,7 +20,7 @@ public class HebbModel {
 
     @Override
     public String toString() {
-        return "HebbModel";
+        return "Hebb Model";
     }
 
     public float getBias() {
@@ -53,7 +52,7 @@ public class HebbModel {
     }
 
     // Trains the model with multiple inputs arrays
-    public void train(int[][] inputs, int[] expectedOutputs) throws IllegalArgumentException {
+    public void train(int[][] inputs, int[] expectedOutputs) {
         if (inputs.length != expectedOutputs.length || inputs[0].length != weigths.length) {
             throw new IllegalArgumentException("Tamanho inválido!");
         }
