@@ -1,8 +1,8 @@
-package com.hebbmodel;
+package com.ann;
 
 import javax.swing.SwingUtilities;
 
-import com.hebbmodel.ui.TrainingFrame;
+import com.ann.ui.TrainingFrame;
 
 public class Main {
 

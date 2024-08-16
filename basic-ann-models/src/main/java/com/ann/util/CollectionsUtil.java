@@ -1,4 +1,4 @@
-package com.hebbmodel.util;
+package com.ann.util;
 
 public class CollectionsUtil {
 

@@ -1,10 +1,10 @@
-package com.hebbmodel.ui;
+package com.ann.ui;
 
 import java.awt.*;
 import javax.swing.*;
 
-import com.hebbmodel.models.HebbModel;
-import com.hebbmodel.util.CollectionsUtil;
+import com.ann.models.HebbModel;
+import com.ann.util.CollectionsUtil;
 
 public class TrainingFrame extends JFrame {
 

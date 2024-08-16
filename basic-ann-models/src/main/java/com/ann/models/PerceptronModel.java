@@ -1,4 +1,4 @@
-package com.hebbmodel.models;
+package com.ann.models;
 
 public class PerceptronModel implements ANNModel {
 
