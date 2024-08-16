@@ -12,13 +12,25 @@ public class TestingFrame extends JFrame {
     private PixelGrid testGrid;
     private JPanel resultsPanel;
     private int resultIndex = 0;
+    private String grid1Label;
+    private String grid2Label;
 
     /**
      * @model the model to be tested
      */
     public TestingFrame(ANNModel model) {
+        this(model, "Grid #1", "Grid #2");
+    }
+
+    /**
+     * @model the model to be tested
+     * @grid1Label the label for the first grid
+     * @grid2Label the label for the second grid
+     */
+    public TestingFrame(ANNModel model, String grid1Label, String grid2Label) {
+        this.grid1Label = grid1Label;
+        this.grid2Label = grid2Label;
         this.model = model;
-        setTitle("Test model");
         setSize(620, 600);
         setResizable(false);
 
@@ -62,9 +74,9 @@ public class TestingFrame extends JFrame {
         // Add the results to the results panel
         float result = model.test(testInput);
         if (result > 0) {
-            resultsPanel.add(new JLabel("#" + resultIndex++ + " Grid 1 (" + result + ")"));
+            resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid1Label));
         } else {
-            resultsPanel.add(new JLabel("#" + resultIndex++ + " Grid 2 (" + result + ")"));
+            resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid2Label));
         }
 
         resultsPanel.revalidate();

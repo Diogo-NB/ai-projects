@@ -3,9 +3,7 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
-import com.ann.models.ANNModel;
-import com.ann.models.HebbModel;
-import com.ann.models.PerceptronModel;
+import com.ann.models.*;
 import com.ann.util.CollectionsUtil;
 
 public class TrainingFrame extends JFrame {
@@ -21,10 +19,16 @@ public class TrainingFrame extends JFrame {
         JPanel gridsPanel = new JPanel();
         gridsPanel.setLayout(new GridLayout(1, 2, 10, 0));
 
-        PixelGrid grid1 = new PixelGrid("Grid #1");
+        JTextField label1 = new JTextField("Grid #1");
+        label1.setMaximumSize(new Dimension(100, 20));
+        label1.setHorizontalAlignment(JTextField.CENTER);
+        PixelGrid grid1 = new PixelGrid(label1);
         gridsPanel.add(grid1);
 
-        PixelGrid grid2 = new PixelGrid("Grid #2");
+        JTextField label2 = new JTextField("Grid #2");
+        label2.setMaximumSize(new Dimension(100, 20));
+        label2.setHorizontalAlignment(JTextField.CENTER);
+        PixelGrid grid2 = new PixelGrid(label2);
         gridsPanel.add(grid2);
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
@@ -35,7 +39,6 @@ public class TrainingFrame extends JFrame {
 
         JButton trainButton = new JButton("Train model & Continue");
         trainButton.addActionListener(e -> {
-            // Gets the data representations of both grids
             int[][] grid1Data = grid1.getGridData();
             int[][] grid2Data = grid2.getGridData();
 
@@ -51,11 +54,21 @@ public class TrainingFrame extends JFrame {
 
             int[] expectedOutputs = new int[] { 1, -1 }; // expected output values for each input
 
-            // Trains the model with the input vectors and expected outputs
             model.train(inputs, expectedOutputs);
 
             // Open the frame for testing the model
-            JFrame testingFrame = new TestingFrame(model);
+            String grid1Label = label1.getText().trim();
+            String grid2Label = label2.getText().trim();
+
+            if (grid1Label.isEmpty()) {
+                grid1Label = "Grid #1";
+            }
+            if (grid2Label.isEmpty()) {
+                grid2Label = "Grid #2";
+            }
+
+            JFrame testingFrame = new TestingFrame(model, grid1Label, grid2Label);
+            testingFrame.setTitle("Testing " + model.toString());
             testingFrame.setVisible(true);
         });
 

@@ -7,13 +7,18 @@ import javax.swing.*;
 public class PixelGrid extends JPanel {
     private JPanel[][] pixels = new JPanel[10][10]; // 2D array to store pixel panels
 
+    public PixelGrid(String title) {
+        this(new JLabel(title));
+    }
+
     public PixelGrid() {
         this("");
     }
 
-    public PixelGrid(String label) {
+    public PixelGrid(Component titleComponent) {
         super();
-        add(new JLabel(label));
+        add(titleComponent);
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel grid = new JPanel();
