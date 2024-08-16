@@ -36,8 +36,8 @@ public class TrainingFrame extends JFrame {
             int[][] inputs = new int[2][100]; // training input arrays
 
             // Converts the matrix representations into one-dimensional arrays
-            inputs[0] = Util.flattenMatrix(grid1Data);
-            inputs[1] = Util.flattenMatrix(grid2Data);
+            inputs[0] = CollectionsUtil.flatten(grid1Data);
+            inputs[1] = CollectionsUtil.flatten(grid2Data);
 
             int[] expectedOutputs = new int[] { 1, -1 }; // expected output values for each input
 

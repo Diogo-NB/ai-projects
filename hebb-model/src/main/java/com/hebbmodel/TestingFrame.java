@@ -51,7 +51,7 @@ public class TestingFrame extends JFrame {
 
     public void testModelAction() {
         int[][] testGridData = testGrid.getGridData();
-        int[] testInput = Util.flattenMatrix(testGridData);
+        int[] testInput = CollectionsUtil.flatten(testGridData);
 
         // Add the results to the results panel
         float result = model.test(testInput);
