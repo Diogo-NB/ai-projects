@@ -35,7 +35,7 @@ public class HebbModel implements ANNModel {
     }
 
     // Train the model with a single input array
-    public void train(int[] input, int expectedOutput) {
+    public void train(int[] input, int target) {
         if (input.length != weigths.length) {
             throw new IllegalArgumentException("Tamanho inválido!");
         }
@@ -45,23 +45,23 @@ public class HebbModel implements ANNModel {
 
         // Calcular os pesos
         for (int j = 0; j < weigths.length; j++) {
-            deltaW = input[j] * expectedOutput;
+            deltaW = input[j] * target;
 
             weigths[j] += deltaW;
         }
 
-        bias += expectedOutput;
+        bias += target;
 
     }
 
-    // Trains the model with multiple inputs arrays
-    public void train(int[][] inputs, int[] expectedOutputs) {
-        if (inputs.length != expectedOutputs.length || inputs[0].length != weigths.length) {
+    // Trains the model with multiple input arrays
+    public void train(int[][] input, int[] target) {
+        if (input.length != target.length || input[0].length != weigths.length) {
             throw new IllegalArgumentException("Tamanho inválido!");
         }
 
-        for (int i = 0; i < inputs.length; i++) {
-            train(inputs[i], expectedOutputs[i]);
+        for (int i = 0; i < input.length; i++) {
+            train(input[i], target[i]);
         }
     }
 

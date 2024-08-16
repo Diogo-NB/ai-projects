@@ -1,5 +1,7 @@
 package com.ann.models;
 
+import com.ann.util.RandomUtil;
+
 public class PerceptronModel implements ANNModel {
 
     // Pesos
@@ -7,7 +9,7 @@ public class PerceptronModel implements ANNModel {
     // Bias
     private float bias = 0.0f;
 
-    private float learningRate = 0.1f;
+    private float learningRate = 0.01f;
 
     /**
      * @param size size of the model
@@ -19,7 +21,7 @@ public class PerceptronModel implements ANNModel {
 
         weigths = new float[size];
         for (int i = 0; i < weigths.length; i++) {
-            weigths[i] = 0.0f;
+            weigths[i] = RandomUtil.randomFloat(-0.5f, +0.5f);
         }
     }
 
@@ -49,18 +51,44 @@ public class PerceptronModel implements ANNModel {
         return learningRate;
     }
 
-    public void train(int[] input, int expectedOutput) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'train'");
-    }
-
-    public void train(int[][] inputs, int[] expectedOutputs) {
-        if (inputs.length != expectedOutputs.length || inputs[0].length != weigths.length) {
+    public void train(int[] input, int target) {
+        if (input.length != weigths.length) {
             throw new IllegalArgumentException("Tamanho inválido!");
         }
 
-        for (int i = 0; i < inputs.length; i++) {
-            train(inputs[i], expectedOutputs[i]);
+        float yLiq = test(input);
+        int y = yLiq >= 0.0f ? 1 : -1;
+        int count = 0;
+
+        while (y != target) {
+            count++;
+            for (int i = 0; i < input.length; i++) {
+                weigths[i] += learningRate * input[i] * target;
+            }
+
+            bias += learningRate * target;
+
+            yLiq = test(input);
+            y = yLiq >= 0.0f ? 1 : -1;
+        }
+
+        System.out.println("Iterações: " + count);
+        // Printing the weigths and bias
+        System.out.println("Pesos: ");
+        for (int i = 0; i < weigths.length; i++) {
+            System.out.print(weigths[i] + " ");
+        }
+        System.out.println();
+        System.out.println("Bias: " + bias);
+    }
+
+    public void train(int[][] input, int[] target) {
+        if (input.length != target.length || input[0].length != weigths.length) {
+            throw new IllegalArgumentException("Tamanho inválido!");
+        }
+
+        for (int i = 0; i < input.length; i++) {
+            train(input[i], target[i]);
         }
     }
 
@@ -76,7 +104,7 @@ public class PerceptronModel implements ANNModel {
 
     public void reset() {
         for (int i = 0; i < weigths.length; i++) {
-            weigths[i] = 0.0f;
+            weigths[i] = RandomUtil.randomFloat(-0.5f, +0.5f);
         }
         bias = 0.0f;
     }

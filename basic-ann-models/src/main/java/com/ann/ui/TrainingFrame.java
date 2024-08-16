@@ -38,19 +38,18 @@ public class TrainingFrame extends JFrame {
             int[][] grid1Data = grid1.getGridData();
             int[][] grid2Data = grid2.getGridData();
 
-            
             int[][] inputs = new int[2][100]; // training input arrays
-            
+
             // Converts the matrix representations into one-dimensional arrays
             inputs[0] = CollectionsUtil.flatten(grid1Data);
             inputs[1] = CollectionsUtil.flatten(grid2Data);
-            
+
             int[] expectedOutputs = new int[] { 1, -1 }; // expected output values for each input
-            
+
             // Get the selected model
             ANNModel model = (ANNModel) comboBox.getSelectedItem();
             model.reset();
-            
+
             model.train(inputs, expectedOutputs);
 
             // Open the frame for testing the model
