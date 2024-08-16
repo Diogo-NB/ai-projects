@@ -19,16 +19,12 @@ public class TrainingFrame extends JFrame {
         JPanel gridsPanel = new JPanel();
         gridsPanel.setLayout(new GridLayout(1, 2, 10, 0));
 
-        JTextField label1 = new JTextField("Grid #1");
-        label1.setMaximumSize(new Dimension(100, 20));
-        label1.setHorizontalAlignment(JTextField.CENTER);
-        PixelGrid grid1 = new PixelGrid(label1);
+        EditLabelField editLabelField1 = new EditLabelField("Grid #1");
+        PixelGrid grid1 = new PixelGrid(editLabelField1);
         gridsPanel.add(grid1);
 
-        JTextField label2 = new JTextField("Grid #2");
-        label2.setMaximumSize(new Dimension(100, 20));
-        label2.setHorizontalAlignment(JTextField.CENTER);
-        PixelGrid grid2 = new PixelGrid(label2);
+        EditLabelField editLabelField2 = new EditLabelField("Grid #2");
+        PixelGrid grid2 = new PixelGrid(editLabelField2);
         gridsPanel.add(grid2);
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
@@ -42,30 +38,24 @@ public class TrainingFrame extends JFrame {
             int[][] grid1Data = grid1.getGridData();
             int[][] grid2Data = grid2.getGridData();
 
-            // Get the selected model
-            ANNModel model = (ANNModel) comboBox.getSelectedItem();
-            model.reset();
-
+            
             int[][] inputs = new int[2][100]; // training input arrays
-
+            
             // Converts the matrix representations into one-dimensional arrays
             inputs[0] = CollectionsUtil.flatten(grid1Data);
             inputs[1] = CollectionsUtil.flatten(grid2Data);
-
+            
             int[] expectedOutputs = new int[] { 1, -1 }; // expected output values for each input
-
+            
+            // Get the selected model
+            ANNModel model = (ANNModel) comboBox.getSelectedItem();
+            model.reset();
+            
             model.train(inputs, expectedOutputs);
 
             // Open the frame for testing the model
-            String grid1Label = label1.getText().trim();
-            String grid2Label = label2.getText().trim();
-
-            if (grid1Label.isEmpty()) {
-                grid1Label = "Grid #1";
-            }
-            if (grid2Label.isEmpty()) {
-                grid2Label = "Grid #2";
-            }
+            String grid1Label = editLabelField1.getLabel();
+            String grid2Label = editLabelField2.getLabel();
 
             JFrame testingFrame = new TestingFrame(model, grid1Label, grid2Label);
             testingFrame.setTitle("Testing " + model.toString());
