@@ -1,4 +1,4 @@
-package com.hebbmodel;
+package com.hebbmodel.models;
 
 public interface ANNModel {
 

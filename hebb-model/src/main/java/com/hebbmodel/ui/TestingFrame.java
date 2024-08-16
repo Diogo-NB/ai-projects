@@ -1,7 +1,10 @@
-package com.hebbmodel;
+package com.hebbmodel.ui;
 
 import java.awt.*;
 import javax.swing.*;
+
+import com.hebbmodel.models.HebbModel;
+import com.hebbmodel.util.CollectionsUtil;
 
 public class TestingFrame extends JFrame {
 

@@ -1,4 +1,4 @@
-package com.hebbmodel;
+package com.hebbmodel.ui;
 
 import java.awt.*;
 import java.awt.event.*;
