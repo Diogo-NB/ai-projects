@@ -9,14 +9,14 @@ public class PerceptronModel implements ANNModel {
     // Bias
     private float bias = 0.0f;
 
-    private float learningRate = 0.01f;
+    private float learningRate = 0.1f;
 
     /**
      * @param size size of the model
      */
     public PerceptronModel(int size) {
         if (size < 0) {
-            throw new IllegalArgumentException("Tamanho inválido!");
+            throw new IllegalArgumentException("Invalid size!");
         }
 
         weigths = new float[size];
@@ -53,7 +53,7 @@ public class PerceptronModel implements ANNModel {
 
     public void train(int[] input, int target) {
         if (input.length != weigths.length) {
-            throw new IllegalArgumentException("Tamanho inválido!");
+            throw new IllegalArgumentException("Invalid size!");
         }
 
         float yLiq = test(input);
@@ -72,19 +72,19 @@ public class PerceptronModel implements ANNModel {
             y = yLiq >= 0.0f ? 1 : -1;
         }
 
-        System.out.println("Iterações: " + count);
+        System.out.println("Iterations: " + count);
         // Printing the weigths and bias
-        System.out.println("Pesos: ");
-        for (int i = 0; i < weigths.length; i++) {
-            System.out.print(weigths[i] + " ");
-        }
-        System.out.println();
-        System.out.println("Bias: " + bias);
+        // System.out.println("Pesos: ");
+        // for (int i = 0; i < weigths.length; i++) {
+        //     System.out.print(weigths[i] + " ");
+        // }
+        // System.out.println();
+        // System.out.println("Bias: " + bias);
     }
 
     public void train(int[][] input, int[] target) {
         if (input.length != target.length || input[0].length != weigths.length) {
-            throw new IllegalArgumentException("Tamanho inválido!");
+            throw new IllegalArgumentException("Invalid size!");
         }
 
         for (int i = 0; i < input.length; i++) {
