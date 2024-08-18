@@ -7,7 +7,7 @@ public class PerceptronModel implements ANNModel {
     // Pesos
     private float[] weigths;
     // Bias
-    private float bias = 0.0f;
+    private float bias;
 
     private float learningRate = 0.1f;
 
@@ -23,6 +23,7 @@ public class PerceptronModel implements ANNModel {
         for (int i = 0; i < weigths.length; i++) {
             weigths[i] = RandomUtil.randomFloat(-0.5f, +0.5f);
         }
+        bias = RandomUtil.randomFloat(-0.1f, +0.1f);
     }
 
     /**
@@ -73,7 +74,6 @@ public class PerceptronModel implements ANNModel {
         }
 
         System.out.println("Iterations: " + count);
-        // Printing the weigths and bias
         // System.out.println("Pesos: ");
         // for (int i = 0; i < weigths.length; i++) {
         //     System.out.print(weigths[i] + " ");
