@@ -23,9 +23,8 @@ public class PerceptronModel implements ANNModel {
         for (int i = 0; i < weigths.length; i++) {
             weigths[i] = RandomUtil.randomFloat(-0.5f, +0.5f);
         }
-        
-        // bias = RandomUtil.randomFloat(-0.5f, +0.5f);
-        bias = 0.0f;
+
+        bias = RandomUtil.randomFloat(-0.5f, +0.5f);
     }
 
     /**
@@ -55,33 +54,7 @@ public class PerceptronModel implements ANNModel {
     }
 
     public void train(int[] input, int target) {
-        if (input.length != weigths.length) {
-            throw new IllegalArgumentException("Invalid size!");
-        }
-
-        float yLiq = test(input);
-        int y = yLiq >= 0.0f ? 1 : -1;
-        int count = 0;
-
-        while (y != target) {
-            count++;
-            for (int i = 0; i < input.length; i++) {
-                weigths[i] += learningRate * input[i] * target;
-            }
-
-            bias += learningRate * target;
-
-            yLiq = test(input);
-            y = yLiq >= 0.0f ? 1 : -1;
-        }
-
-        System.out.println("Iterations: " + count);
-        // System.out.println("Pesos: ");
-        // for (int i = 0; i < weigths.length; i++) {
-        // System.out.print(weigths[i] + " ");
-        // }
-        // System.out.println();
-        // System.out.println("Bias: " + bias);
+        train(new int[][]{input}, new int[]{target});
     }
 
     public void train(int[][] input, int[] target) {
@@ -89,9 +62,31 @@ public class PerceptronModel implements ANNModel {
             throw new IllegalArgumentException("Invalid size!");
         }
 
-        for (int i = 0; i < input.length; i++) {
-            train(input[i], target[i]);
+        boolean trained = false;
+        int count = 0;
+
+        while (!trained) {
+            trained = true;
+
+            for (int i = 0; i < input.length; i++) {
+                float yLiq = test(input[i]);
+                int y = yLiq >= 0.0f ? 1 : -1;
+
+                if (y != target[i]) {
+                    trained = false;
+                    count++;
+
+                    // Update weigths and bias
+                    for (int j = 0; j < input[i].length; j++) {
+                        weigths[j] += learningRate * input[i][j] * target[i];
+                    }
+
+                    bias += learningRate * target[i];
+                }
+            }
         }
+
+        System.out.println("Training tries: " + count);
     }
 
     public float test(int[] array) {
