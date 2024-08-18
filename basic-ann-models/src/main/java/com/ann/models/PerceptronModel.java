@@ -103,7 +103,7 @@ public class PerceptronModel implements ANNModel {
         for (int i = 0; i < weigths.length; i++) {
             weigths[i] = RandomUtil.randomFloat(-0.5f, +0.5f);
         }
-        bias = 0.0f;
+        bias = RandomUtil.randomFloat(-0.5f, +0.5f);
     }
 
 }
