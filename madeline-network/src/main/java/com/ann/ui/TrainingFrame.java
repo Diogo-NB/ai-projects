@@ -3,14 +3,12 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
-import com.ann.models.*;
-
 public class TrainingFrame extends JFrame {
 
     public TrainingFrame() {
         setSize(650, 600);
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -20,7 +18,7 @@ public class TrainingFrame extends JFrame {
 
         TextField editLabelField = new TextField("Grid");
         editLabelField.setPreferredSize(new Dimension(150, 550));
-        PixelGrid grid = new PixelGrid(editLabelField, 15);
+        PixelGrid grid = new PixelGrid(15);
         gridsPanel.add(grid);
 
         JPanel column = new JPanel();

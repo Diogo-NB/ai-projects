@@ -39,7 +39,7 @@ public class TestingFrame extends JFrame {
 
         JPanel gridsPanel = new JPanel();
         gridsPanel.setLayout(new GridLayout(1, 2, 10, 0));
-        testGrid = new PixelGrid("Test grid", 15);
+        testGrid = new PixelGrid(15);
         gridsPanel.add(testGrid);
 
         resultsPanel = new JPanel();

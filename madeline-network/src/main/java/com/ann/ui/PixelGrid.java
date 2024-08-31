@@ -10,18 +10,9 @@ public class PixelGrid extends JPanel {
     private JPanel[][] pixels;
 
     public PixelGrid(int size) {
-        this("", size);
-    }
-
-    public PixelGrid(String title, int size) {
-        this(new JLabel(title), size);
-    }
-
-    public PixelGrid(Component titleComponent, int size) {
         super();
         this.size = size;
         pixels = new JPanel[size][size];
-        add(titleComponent);
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
