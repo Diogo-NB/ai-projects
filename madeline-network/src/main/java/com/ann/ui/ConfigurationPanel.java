@@ -5,13 +5,23 @@ import javax.swing.*;
 
 public class ConfigurationPanel extends JPanel {
 
-    GridBagConstraints gbc;
+    private GridBagConstraints gbc;
+    private LabeledComponent gridSizeField;
+    private LabeledComponent learningRateField;
 
     @Override
     public Component add(Component comp) {
         super.add(comp, gbc);
         gbc.gridy++;
         return comp;
+    }
+
+    public float getToleratedError() {
+        return (float) gridSizeField.getValue();
+    }
+
+    public float getLearningRate() {
+        return (float) learningRateField.getValue();
     }
 
     public ConfigurationPanel() {
@@ -28,13 +38,14 @@ public class ConfigurationPanel extends JPanel {
         title.setFont(new Font("Arial", Font.BOLD, 20));
         add(title);
 
-        JSpinner gridSizeSpinner = new JSpinner(new SpinnerNumberModel(10, 2, 30, 1));
-        gridSizeSpinner.setPreferredSize(new Dimension(35, 20));
-        LabeledComponent gridSizeField = new LabeledComponent("Input Grid Size:", gridSizeSpinner) {
+        SpinnerNumberModel toleratedErrorSpinnerModel = new SpinnerNumberModel(0.1, 0.0, 1, 0.05);
+        JSpinner toleratedErrorSpinner = new JSpinner(toleratedErrorSpinnerModel);
+        toleratedErrorSpinner.setPreferredSize(new Dimension(50, 20));
+        gridSizeField = new LabeledComponent("Tolerated error:", toleratedErrorSpinner) {
 
             @Override
             public Object getValue() {
-                return Integer.parseInt(gridSizeSpinner.getValue().toString());
+                return Float.parseFloat(toleratedErrorSpinner.getValue().toString());
             }
 
         };
@@ -42,10 +53,10 @@ public class ConfigurationPanel extends JPanel {
         add(gridSizeField);
 
         gbc.gridy++;
-        SpinnerNumberModel model = new SpinnerNumberModel(0.1, 0.0, 1, 0.05);
-        JSpinner learningRateSpinner = new JSpinner(model);
+        SpinnerNumberModel learningRateSpinnerModel = new SpinnerNumberModel(0.1, 0.0, 1, 0.05);
+        JSpinner learningRateSpinner = new JSpinner(learningRateSpinnerModel);
         learningRateSpinner.setPreferredSize(new Dimension(50, 20));
-        LabeledComponent learningRateField = new LabeledComponent("Model's Learning rate:", learningRateSpinner) {
+        learningRateField = new LabeledComponent("Model's Learning rate:", learningRateSpinner) {
 
             @Override
             public Object getValue() {
