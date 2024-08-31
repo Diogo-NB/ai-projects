@@ -6,12 +6,14 @@ import javax.swing.*;
 public class TrainingFrame extends JFrame {
 
     public TrainingFrame() {
-        setSize(650, 600);
+        setSize(650 + 200, 600);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        mainPanel.add(new ConfigurationPanel(), BorderLayout.WEST);
 
         JPanel gridsPanel = new JPanel();
         gridsPanel.setLayout(new BoxLayout(gridsPanel, BoxLayout.X_AXIS));
@@ -30,7 +32,6 @@ public class TrainingFrame extends JFrame {
         gridsPanel.add(column);
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
-
 
         JButton trainButton = new JButton("Train model & Continue");
         trainButton.addActionListener(e -> {

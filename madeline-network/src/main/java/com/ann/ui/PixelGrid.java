@@ -34,12 +34,6 @@ public class PixelGrid extends JPanel {
         }
 
         add(grid);
-        JButton clearButton = new JButton("Clear");
-        clearButton.addActionListener(e -> {
-            clearGrid();
-        });
-
-        add(clearButton, BorderLayout.EAST);
     }
 
     public int getPixelValue(int row, int col) {

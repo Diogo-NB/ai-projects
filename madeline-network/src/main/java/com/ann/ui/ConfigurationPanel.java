@@ -3,25 +3,19 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
-public class ConfigurationFrame extends JFrame {
+public class ConfigurationPanel extends JPanel {
 
     GridBagConstraints gbc;
-    JPanel panel;
 
     @Override
     public Component add(Component comp) {
-        panel.add(comp, gbc);
+        super.add(comp, gbc);
         gbc.gridy++;
         return comp;
     }
 
-    public ConfigurationFrame() {
-        super();
-        setResizable(false);
-        setSize(300, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        panel = new JPanel(new GridBagLayout());
+    public ConfigurationPanel() {
+        setLayout(new GridBagLayout());
 
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -61,17 +55,5 @@ public class ConfigurationFrame extends JFrame {
         };
 
         add(learningRateField);
-
-        // gbc.gridy++;
-        // JButton btn3 = new JButton("Next");
-        // btn3.addActionListener(e -> {
-        //     TrainingFrame ConfigurationFrameFrame = new TrainingFrame();
-        //     ConfigurationFrameFrame.setTitle("Madeline Network");
-        //     ConfigurationFrameFrame.setVisible(true);
-        // });
-        // add(btn3);
-
-        super.add(panel);
     }
-
 }
