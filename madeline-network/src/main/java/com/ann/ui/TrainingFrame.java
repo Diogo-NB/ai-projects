@@ -18,7 +18,7 @@ public class TrainingFrame extends JFrame {
         JPanel gridsPanel = new JPanel();
         gridsPanel.setLayout(new BoxLayout(gridsPanel, BoxLayout.X_AXIS));
 
-        EditLabelField editLabelField = new EditLabelField("Grid");
+        TextField editLabelField = new TextField("Grid");
         PixelGrid grid = new PixelGrid(editLabelField, 15);
         gridsPanel.add(grid);
 
