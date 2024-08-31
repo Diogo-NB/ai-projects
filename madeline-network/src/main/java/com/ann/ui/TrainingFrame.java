@@ -19,6 +19,7 @@ public class TrainingFrame extends JFrame {
         gridsPanel.setLayout(new BoxLayout(gridsPanel, BoxLayout.X_AXIS));
 
         TextField editLabelField = new TextField("Grid");
+        editLabelField.setPreferredSize(new Dimension(150, 550));
         PixelGrid grid = new PixelGrid(editLabelField, 15);
         gridsPanel.add(grid);
 
@@ -32,9 +33,6 @@ public class TrainingFrame extends JFrame {
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
 
-        ANNModel[] models = new ANNModel[] { new PerceptronModel(100), new HebbModel(100) };
-        JComboBox<ANNModel> comboBox = new JComboBox<>(models);
-        comboBox.setSelectedIndex(0);
 
         JButton trainButton = new JButton("Train model & Continue");
         trainButton.addActionListener(e -> {
@@ -44,8 +42,6 @@ public class TrainingFrame extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         buttonPanel.add(trainButton);
-
-        buttonPanel.add(comboBox);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
