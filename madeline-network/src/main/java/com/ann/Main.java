@@ -5,7 +5,7 @@ import com.ann.ui.*;
 public class Main {
 
     public static void main(String[] args) {
-        TrainingFrame mainFrame = new TrainingFrame();
+        TrainingFrame mainFrame = new TrainingFrame(10);
         mainFrame.setTitle("Madeline Network");
 
         // ConfigurationPanel configurationPanel = new ConfigurationPanel();

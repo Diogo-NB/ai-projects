@@ -5,7 +5,9 @@ import javax.swing.*;
 
 public class TrainingFrame extends JFrame {
 
-    public TrainingFrame() {
+    private PixelGrid grid;
+
+    public TrainingFrame(int gridSize) {
         setSize(650 + 200, 600);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -20,7 +22,7 @@ public class TrainingFrame extends JFrame {
 
         TextField editLabelField = new TextField("Grid");
         editLabelField.setPreferredSize(new Dimension(150, 550));
-        PixelGrid grid = new PixelGrid(15);
+        grid = new PixelGrid(gridSize);
         gridsPanel.add(grid);
 
         JPanel column = new JPanel();
@@ -33,14 +35,20 @@ public class TrainingFrame extends JFrame {
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
 
-        JButton trainButton = new JButton("Train model & Continue");
-        trainButton.addActionListener(e -> {
+        JButton saveButton = new JButton("Save Grid");
+        saveButton.addActionListener(e -> {
 
+        });
+
+        JButton clearButton = new JButton("Clear Grid");
+        clearButton.addActionListener(e -> {
+            grid.clear();
         });
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        buttonPanel.add(trainButton);
+        buttonPanel.add(clearButton);
+        buttonPanel.add(saveButton);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
