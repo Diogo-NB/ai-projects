@@ -24,6 +24,10 @@ public class GridsListPanel extends JPanel {
         gridsModel.removeElement(gridItem);
     }
 
+    public GridItem getSelectedGrid() {
+        return grids.getSelectedValue();
+    }
+
     public GridsListPanel() {
         setLayout(new GridBagLayout());
 

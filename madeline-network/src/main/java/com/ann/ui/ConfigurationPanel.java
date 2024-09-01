@@ -51,6 +51,10 @@ public class ConfigurationPanel extends JPanel {
         title.setFont(new Font("Arial", Font.BOLD, 20));
         add(title);
 
+        labelsModel = new DefaultListModel<>();
+        labels = new JList<>(labelsModel);
+        labels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         SpinnerNumberModel toleratedErrorSpinnerModel = new SpinnerNumberModel(0.1, 0.0, 1, 0.05);
         JSpinner toleratedErrorSpinner = new JSpinner(toleratedErrorSpinnerModel);
         toleratedErrorSpinner.setPreferredSize(new Dimension(50, 20));
@@ -78,8 +82,6 @@ public class ConfigurationPanel extends JPanel {
         };
         add(learningRateField);
 
-        labelsModel = new DefaultListModel<>();
-        labels = new JList<>(labelsModel);
         JScrollPane scrollPane = new JScrollPane(labels);
         scrollPane.setPreferredSize(new Dimension(100, 200));
 
@@ -100,6 +102,7 @@ public class ConfigurationPanel extends JPanel {
             }
 
             labelsModel.addElement(label);
+            labels.setSelectedValue(label, true);
         });
 
         add(addLabelBt);

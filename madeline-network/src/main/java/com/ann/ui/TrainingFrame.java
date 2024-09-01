@@ -35,48 +35,40 @@ public class TrainingFrame extends JFrame {
         gridsListPanel = new GridsListPanel();
         column.add(gridsListPanel);
 
-        DefaultListModel<GridItem> listModel = new DefaultListModel<>();
-        JList<GridItem> list = new JList<>(listModel);
-        JScrollPane listScrollPane = new JScrollPane(list);
-        listScrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
-        // column.add(listScrollPane);
-
-        JButton removeButton = new JButton("Remove Grid");
-        // column.add(removeButton, BorderLayout.CENTER);
-
-        removeButton.addActionListener(e -> {
-            int selectedIndex = list.getSelectedIndex();
-            if (selectedIndex != -1) {
-                listModel.remove(selectedIndex);
-            }
-        });
-
-
         gridsPanel.add(column);
-
+        
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
-
-        JButton addButton = new JButton("Add Grid");
-        gridsListPanel.add(addButton);
-        addButton.addActionListener(e -> {
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        
+        JButton addGridBt = new JButton("Add Grid");
+        buttonPanel.add(addGridBt);
+        addGridBt.addActionListener(e -> {
             String label = configPanel.getSelectedLabel();
-
+            
             if (label == null || label.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Select a label", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            listModel.addElement(new GridItem(listIndex++, label, grid.getGridData()));
-            grid.clear();
+            
+            gridsListPanel.addGrid(new GridItem(listIndex++, label, grid.getGridData()));
+        });
+        
+        JButton rmGridBt = new JButton("Remove Grid");
+        buttonPanel.add(rmGridBt);
+        rmGridBt.addActionListener(e -> {
+            GridItem selectedGrid = gridsListPanel.getSelectedGrid();
+            if (selectedGrid != null) {
+                gridsListPanel.removeGrid(selectedGrid);
+            }
         });
 
-        JButton clearButton = new JButton("Clear Grid");
-        clearButton.addActionListener(e -> grid.clear());
+        JButton clrGridBt = new JButton("Clear Grid");
+        clrGridBt.addActionListener(e -> grid.clear());
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-        buttonPanel.add(clearButton);
+        buttonPanel.add(clrGridBt);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
