@@ -8,6 +8,8 @@ public class ConfigurationPanel extends JPanel {
     private GridBagConstraints gbc;
     private LabeledComponent gridSizeField;
     private LabeledComponent learningRateField;
+    private DefaultListModel<String> labelsModel;
+    private JList<String> labels;
 
     @Override
     public Component add(Component comp) {
@@ -22,6 +24,18 @@ public class ConfigurationPanel extends JPanel {
 
     public float getLearningRate() {
         return (float) learningRateField.getValue();
+    }
+
+    public String getSelectedLabel() {
+        return labels.getSelectedValue();
+    }
+
+    public String[] getLabels() {
+        String[] labels = new String[labelsModel.size()];
+        for (int i = 0; i < labelsModel.size(); i++) {
+            labels[i] = labelsModel.get(i);
+        }
+        return labels;
     }
 
     public ConfigurationPanel() {
@@ -51,7 +65,6 @@ public class ConfigurationPanel extends JPanel {
 
         add(gridSizeField);
 
-        gbc.gridy++;
         SpinnerNumberModel learningRateSpinnerModel = new SpinnerNumberModel(0.1, 0.0, 1, 0.05);
         JSpinner learningRateSpinner = new JSpinner(learningRateSpinnerModel);
         learningRateSpinner.setPreferredSize(new Dimension(50, 20));
@@ -63,7 +76,31 @@ public class ConfigurationPanel extends JPanel {
             }
 
         };
-
         add(learningRateField);
+
+        labelsModel = new DefaultListModel<>();
+        labels = new JList<>(labelsModel);
+        JScrollPane scrollPane = new JScrollPane(labels);
+        scrollPane.setPreferredSize(new Dimension(100, 200));
+
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.BOTH; // Expand to fill the available space
+
+        add(scrollPane);
+
+        JButton addLabelBt = new JButton("Add Label");
+        addLabelBt.addActionListener(e -> {
+            String label = JOptionPane.showInputDialog(this, "Enter label", "Add label", JOptionPane.PLAIN_MESSAGE);
+            label = label.trim();
+
+            if (label == null || label.isEmpty() || labelsModel.contains(label)) {
+                return;
+            }
+
+            labelsModel.addElement(label);
+        });
+
+        add(addLabelBt);
     }
+
 }

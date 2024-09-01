@@ -6,7 +6,8 @@ import javax.swing.*;
 public class TrainingFrame extends JFrame {
 
     private PixelGrid grid;
-    private int listIndex = 0;
+    private ConfigurationPanel configPanel;
+    private int listIndex = 1;
 
     public TrainingFrame(int gridSize) {
         setSize(650 + 200, 600);
@@ -16,7 +17,8 @@ public class TrainingFrame extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        mainPanel.add(new ConfigurationPanel(), BorderLayout.WEST);
+        configPanel = new ConfigurationPanel();
+        mainPanel.add(configPanel, BorderLayout.WEST);
 
         JPanel gridsPanel = new JPanel();
         gridsPanel.setLayout(new BoxLayout(gridsPanel, BoxLayout.X_AXIS));
@@ -26,15 +28,16 @@ public class TrainingFrame extends JFrame {
 
         JPanel column = new JPanel();
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
-        column.setMaximumSize(new Dimension(150, 550));
-        column.setPreferredSize(new Dimension(150, 550));
+        column.setMaximumSize(new Dimension(125, 550));
+        column.setPreferredSize(new Dimension(125, 550));
 
-        column.add(new JLabel("SAVED GRIDS"), BorderLayout.CENTER);
+        JLabel gridsLabel = new JLabel("GRIDS", JLabel.CENTER);
+        gridsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        column.add(gridsLabel);
 
         DefaultListModel<GridItem> listModel = new DefaultListModel<>();
         JList<GridItem> list = new JList<>(listModel);
-
-        column.add(new JScrollPane(list));
+        
 
         JButton removeButton = new JButton("Remove Grid");
         column.add(removeButton, BorderLayout.CENTER);
@@ -42,7 +45,7 @@ public class TrainingFrame extends JFrame {
         removeButton.addActionListener(e -> {
             int selectedIndex = list.getSelectedIndex();
             if (selectedIndex != -1) {
-                listModel.remove(selectedIndex); 
+                listModel.remove(selectedIndex);
             }
         });
 
@@ -50,12 +53,18 @@ public class TrainingFrame extends JFrame {
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
 
-        JButton saveButton = new JButton("Save Grid");
-        saveButton.addActionListener(e -> {
+        JButton addButton = new JButton("Add Grid");
+        column.add(addButton, BorderLayout.CENTER);
+        addButton.addActionListener(e -> {
+            String label = configPanel.getSelectedLabel();
 
-            String label = JOptionPane.showInputDialog(this, "Enter label for grid", "Save Grid", JOptionPane.PLAIN_MESSAGE);
+            if (label == null || label.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Select a label", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             listModel.addElement(new GridItem(listIndex++, label, grid.getGridData()));
-
+            grid.clear();
         });
 
         JButton clearButton = new JButton("Clear Grid");
@@ -65,8 +74,8 @@ public class TrainingFrame extends JFrame {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
         buttonPanel.add(clearButton);
-        buttonPanel.add(saveButton);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
