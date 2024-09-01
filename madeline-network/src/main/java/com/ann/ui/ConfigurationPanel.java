@@ -84,7 +84,9 @@ public class ConfigurationPanel extends JPanel {
         scrollPane.setPreferredSize(new Dimension(100, 200));
 
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.BOTH; // Expand to fill the available space
+        gbc.fill = GridBagConstraints.VERTICAL;
+
+        add(new JLabel("Labels"));
 
         add(scrollPane);
 

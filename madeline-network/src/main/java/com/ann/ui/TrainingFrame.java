@@ -7,6 +7,7 @@ public class TrainingFrame extends JFrame {
 
     private PixelGrid grid;
     private ConfigurationPanel configPanel;
+    private GridsListPanel gridsListPanel;
     private int listIndex = 1;
 
     public TrainingFrame(int gridSize) {
@@ -31,16 +32,17 @@ public class TrainingFrame extends JFrame {
         column.setMaximumSize(new Dimension(125, 550));
         column.setPreferredSize(new Dimension(125, 550));
 
-        JLabel gridsLabel = new JLabel("GRIDS", JLabel.CENTER);
-        gridsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        column.add(gridsLabel);
+        gridsListPanel = new GridsListPanel();
+        column.add(gridsListPanel);
 
         DefaultListModel<GridItem> listModel = new DefaultListModel<>();
         JList<GridItem> list = new JList<>(listModel);
-        
+        JScrollPane listScrollPane = new JScrollPane(list);
+        listScrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // column.add(listScrollPane);
 
         JButton removeButton = new JButton("Remove Grid");
-        column.add(removeButton, BorderLayout.CENTER);
+        // column.add(removeButton, BorderLayout.CENTER);
 
         removeButton.addActionListener(e -> {
             int selectedIndex = list.getSelectedIndex();
@@ -49,12 +51,13 @@ public class TrainingFrame extends JFrame {
             }
         });
 
+
         gridsPanel.add(column);
 
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
 
         JButton addButton = new JButton("Add Grid");
-        column.add(addButton, BorderLayout.CENTER);
+        gridsListPanel.add(addButton);
         addButton.addActionListener(e -> {
             String label = configPanel.getSelectedLabel();
 
@@ -68,9 +71,7 @@ public class TrainingFrame extends JFrame {
         });
 
         JButton clearButton = new JButton("Clear Grid");
-        clearButton.addActionListener(e -> {
-            grid.clear();
-        });
+        clearButton.addActionListener(e -> grid.clear());
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
