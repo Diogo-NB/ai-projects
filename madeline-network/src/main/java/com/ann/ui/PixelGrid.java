@@ -36,6 +36,10 @@ public class PixelGrid extends JPanel {
         add(grid);
     }
 
+    public int getGridSize() {
+        return size;
+    }
+
     public int getPixelValue(int row, int col) {
         return pixels[row][col].getBackground().equals(Color.WHITE) ? 1 : -1;
     }
@@ -52,7 +56,7 @@ public class PixelGrid extends JPanel {
         return gridData;
     }
 
-    public void clearGrid() {
+    public void clear() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 pixels[i][j].setBackground(Color.WHITE);

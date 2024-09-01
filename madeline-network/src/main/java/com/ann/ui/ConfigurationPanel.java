@@ -33,7 +33,6 @@ public class ConfigurationPanel extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        // Adding a title
         JLabel title = new JLabel("Configuration");
         title.setFont(new Font("Arial", Font.BOLD, 20));
         add(title);
