@@ -91,6 +91,18 @@ public class Vector {
         return v.clone();
     }
 
+    public boolean equals(Vector v) {
+        if (v.size() != this.size()) {
+            return false;
+        }
+        for (int i = 0; i < v.size(); i++) {
+            if (v.get(i) != this.get(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void add(Vector v) {
         add(this, v, this);
     }
