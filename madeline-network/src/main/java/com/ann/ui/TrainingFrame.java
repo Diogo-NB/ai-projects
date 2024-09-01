@@ -36,25 +36,25 @@ public class TrainingFrame extends JFrame {
         column.add(gridsListPanel);
 
         gridsPanel.add(column);
-        
+
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
-        
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        
+
         JButton addGridBt = new JButton("Add Grid");
         buttonPanel.add(addGridBt);
         addGridBt.addActionListener(e -> {
             String label = configPanel.getSelectedLabel();
-            
+
             if (label == null || label.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Select a label", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             gridsListPanel.addGrid(new GridItem(listIndex++, label, grid.getGridData()));
         });
-        
+
         JButton rmGridBt = new JButton("Remove Grid");
         buttonPanel.add(rmGridBt);
         rmGridBt.addActionListener(e -> {
@@ -65,14 +65,20 @@ public class TrainingFrame extends JFrame {
         });
 
         JButton clrGridBt = new JButton("Clear Grid");
+        buttonPanel.add(clrGridBt);
         clrGridBt.addActionListener(e -> grid.clear());
 
-
-        buttonPanel.add(clrGridBt);
+        JButton trainBt = new JButton("Train & Continue");
+        buttonPanel.add(trainBt);
+        trainBt.addActionListener(e -> train());
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
+    }
+
+    public void train() {
+
     }
 
 }

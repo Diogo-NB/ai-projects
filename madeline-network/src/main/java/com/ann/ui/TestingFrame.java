@@ -3,31 +3,22 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
-import com.ann.models.ANNModel;
-import com.ann.util.CollectionsUtil;
+import com.ann.madeline.MadelineNetwork;
 
 public class TestingFrame extends JFrame {
 
-    private ANNModel model;
+    private MadelineNetwork model;
     private PixelGrid testGrid;
     private JPanel resultsPanel;
     private int resultIndex = 0;
     private String grid1Label;
     private String grid2Label;
 
-    /**
-     * @model the model to be tested
-     */
-    public TestingFrame(ANNModel model) {
+    public TestingFrame(MadelineNetwork model) {
         this(model, "Grid #1", "Grid #2");
     }
 
-    /**
-     * @model the model to be tested
-     * @grid1Label the label for the first grid
-     * @grid2Label the label for the second grid
-     */
-    public TestingFrame(ANNModel model, String grid1Label, String grid2Label) {
+    public TestingFrame(MadelineNetwork model, String grid1Label, String grid2Label) {
         this.grid1Label = grid1Label;
         this.grid2Label = grid2Label;
         this.model = model;
@@ -68,18 +59,18 @@ public class TestingFrame extends JFrame {
     }
 
     public void testModelAction() {
-        int[][] testGridData = testGrid.getGridData();
-        int[] testInput = CollectionsUtil.flatten(testGridData);
+        // int[][] testGridData = testGrid.getGridData();
+        // int[] testInput = CollectionsUtil.flatten(testGridData);
 
-        // Add the results to the results panel
-        float result = model.test(testInput);
-        if (result >= 0.0f) {
-            resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid1Label));
-        } else {
-            resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid2Label));
-        }
+        // // Add the results to the results panel
+        // float result = model.test(testInput);
+        // if (result >= 0.0f) {
+        //     resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid1Label));
+        // } else {
+        //     resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid2Label));
+        // }
 
-        resultsPanel.revalidate();
-        resultsPanel.repaint();
+        // resultsPanel.revalidate();
+        // resultsPanel.repaint();
     }
 }
