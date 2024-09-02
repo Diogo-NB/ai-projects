@@ -9,14 +9,14 @@ public class Vector {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append("(");
+        sb.append("[]");
         for (int i = 0; i < v.length; i++) {
             sb.append(v[i]);
             if (i < v.length - 1) {
                 sb.append(", ");
             }
         }
-        sb.append(")");
+        sb.append("]");
         return sb.toString();
     }
 
@@ -91,6 +91,14 @@ public class Vector {
         return v.clone();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Vector) {
+            return equals((Vector) obj);
+        }
+        return false;
+    }
+
     public boolean equals(Vector v) {
         if (v.size() != this.size()) {
             return false;
@@ -152,6 +160,20 @@ public class Vector {
         for (int i = 0; i < a.v.length; i++) {
             result.v[i] = a.v[i] * scalar;
         }
+    }
+
+    public float sum() {
+        return sum(this);
+    }
+
+    public static float sum(Vector a) {
+        float sum = 0.0f;
+
+        for (int i = 0; i < a.v.length; i++) {
+            sum += a.v[i];
+        }
+
+        return sum;
     }
 
     public static void checkLengths(Vector... vectors) {
