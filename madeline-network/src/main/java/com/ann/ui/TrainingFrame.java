@@ -3,6 +3,8 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import com.ann.madeline.MadelineNetwork;
+
 public class TrainingFrame extends JFrame {
 
     private PixelGrid grid;
@@ -79,6 +81,18 @@ public class TrainingFrame extends JFrame {
 
     public void train() {
 
+        int n = grid.getGridSize() * grid.getGridSize();
+        String[] labels = configPanel.getLabels();
+
+        // GridItem[] gridItems = gridsListPanel.getGridItems();
+
+        MadelineNetwork ann = new MadelineNetwork(
+                n,
+                labels,
+                configPanel.getToleratedError(),
+                configPanel.getLearningRate());
+
+        System.out.println(ann);
     }
 
 }
