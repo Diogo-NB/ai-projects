@@ -28,6 +28,14 @@ public class GridsListPanel extends JPanel {
         return grids.getSelectedValue();
     }
 
+    public GridItem[] getGridItems() {
+        GridItem[] gridItems = new GridItem[gridsModel.size()];
+        for (int i = 0; i < gridItems.length; i++) {
+            gridItems[i] = gridsModel.get(i);
+        }
+        return gridItems;
+    }
+
     public GridsListPanel() {
         setLayout(new GridBagLayout());
 
