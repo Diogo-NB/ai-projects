@@ -31,6 +31,7 @@ public class ConfigurationPanel extends JPanel {
     }
 
     public String[] getLabels() {
+        labelsModel.toArray();
         String[] labels = new String[labelsModel.size()];
         for (int i = 0; i < labelsModel.size(); i++) {
             labels[i] = labelsModel.get(i);
@@ -55,9 +56,9 @@ public class ConfigurationPanel extends JPanel {
         labels = new JList<>(labelsModel);
         labels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        SpinnerNumberModel toleratedErrorSpinnerModel = new SpinnerNumberModel(0.1, 0.0, 1, 0.05);
+        SpinnerNumberModel toleratedErrorSpinnerModel = new SpinnerNumberModel(0.01, 0.0, 1, 0.005);
         JSpinner toleratedErrorSpinner = new JSpinner(toleratedErrorSpinnerModel);
-        toleratedErrorSpinner.setPreferredSize(new Dimension(50, 20));
+        toleratedErrorSpinner.setPreferredSize(new Dimension(60, 20));
         gridSizeField = new LabeledComponent("Tolerated error:", toleratedErrorSpinner) {
 
             @Override
@@ -69,9 +70,9 @@ public class ConfigurationPanel extends JPanel {
 
         add(gridSizeField);
 
-        SpinnerNumberModel learningRateSpinnerModel = new SpinnerNumberModel(0.1, 0.0, 1, 0.05);
+        SpinnerNumberModel learningRateSpinnerModel = new SpinnerNumberModel(0.1, 0.0, 1, 0.005);
         JSpinner learningRateSpinner = new JSpinner(learningRateSpinnerModel);
-        learningRateSpinner.setPreferredSize(new Dimension(50, 20));
+        learningRateSpinner.setPreferredSize(new Dimension(60, 20));
         learningRateField = new LabeledComponent("Model's Learning rate:", learningRateSpinner) {
 
             @Override
