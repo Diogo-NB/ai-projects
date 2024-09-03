@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.ann.madeline.MadelineNetwork;
+import com.ann.util.Vector;
 
 public class TrainingFrame extends JFrame {
 
@@ -83,16 +84,36 @@ public class TrainingFrame extends JFrame {
 
         int n = grid.getGridSize() * grid.getGridSize();
         String[] labels = configPanel.getLabels();
+        // String[] labels = { "Class 0", "Class 1", "Class 2" };
 
-        // GridItem[] gridItems = gridsListPanel.getGridItems();
+        GridItem[] gridItems = gridsListPanel.getGridItems();
+
+        Vector[] inputs = new Vector[gridItems.length];
+
+        for (int i = 0; i < inputs.length; i++) {
+            inputs[i] = gridItems[i].getGridData();
+            System.out.println("Inputs[" + i + "] = " + inputs[i]);
+        }
+
+        // Vector[] inputs = new Vector[3];
+        // for (int i = 0; i < inputs.length; i++) {
+        // inputs[i] = Vector.random(n);
+        // for (int j = 0; j < inputs[i].size(); j++) {
+        // inputs[i].set(j, inputs[i].get(j) > 0.5f ? 1.0f : 0.0f);
+        // }
+        // System.out.println("Inputs[" + i + "] = " + inputs[i]);
+        // }
 
         MadelineNetwork ann = new MadelineNetwork(
                 n,
                 labels,
                 configPanel.getToleratedError(),
                 configPanel.getLearningRate());
-
+                
         System.out.println(ann);
+
+        ann.train(inputs, labels);
+
     }
 
 }
