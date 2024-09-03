@@ -1,5 +1,7 @@
 package com.ann.ui;
 
+import com.ann.util.Vector;
+
 public class GridItem {
 
     private int id;
@@ -10,6 +12,14 @@ public class GridItem {
 
     public int getGridSize() {
         return gridData.length;
+    }
+
+    public Vector getGridData() {
+        Vector[] gridDataVectors = new Vector[gridData.length];
+        for (int i = 0; i < gridData.length; i++) {
+            gridDataVectors[i] = new Vector(gridData[i]);
+        }
+        return Vector.flatten(gridDataVectors);
     }
 
     public GridItem(int id, String label, int[][] gridData) {
