@@ -65,9 +65,9 @@ public class TestingFrame extends JFrame {
         // // Add the results to the results panel
         // float result = model.test(testInput);
         // if (result >= 0.0f) {
-        //     resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid1Label));
+        // resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid1Label));
         // } else {
-        //     resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid2Label));
+        // resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid2Label));
         // }
 
         // resultsPanel.revalidate();

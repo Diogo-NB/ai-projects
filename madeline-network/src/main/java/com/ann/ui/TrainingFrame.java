@@ -48,10 +48,14 @@ public class TrainingFrame extends JFrame {
         JButton addGridBt = new JButton("Add Grid");
         buttonPanel.add(addGridBt);
         addGridBt.addActionListener(e -> {
-            String label = configPanel.getSelectedLabel();
+            // String label = configPanel.getSelectedLabel();
+
+            String label = JOptionPane.showInputDialog(this, "Enter a label:", "Label Input",
+                    JOptionPane.INFORMATION_MESSAGE);
 
             if (label == null || label.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Select a label", "Error", JOptionPane.ERROR_MESSAGE);
+                // JOptionPane.showMessageDialog(this, "Select a label", "Error",
+                // JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -83,37 +87,28 @@ public class TrainingFrame extends JFrame {
     public void train() {
 
         int n = grid.getGridSize() * grid.getGridSize();
-        String[] labels = configPanel.getLabels();
-        // String[] labels = { "Class 0", "Class 1", "Class 2" };
+        // String[] labels = configPanel.getLabels();
 
         GridItem[] gridItems = gridsListPanel.getGridItems();
 
         Vector[] inputs = new Vector[gridItems.length];
 
+        String[] labels = new String[inputs.length];
+
         for (int i = 0; i < inputs.length; i++) {
             inputs[i] = gridItems[i].getGridData();
-            System.out.println("Inputs[" + i + "] = " + inputs[i]);
+            labels[i] = gridItems[i].getLabel();
         }
 
-        // Vector[] inputs = new Vector[3];
-        // for (int i = 0; i < inputs.length; i++) {
-        // inputs[i] = Vector.random(n);
-        // for (int j = 0; j < inputs[i].size(); j++) {
-        // inputs[i].set(j, inputs[i].get(j) > 0.5f ? 1.0f : 0.0f);
-        // }
-        // System.out.println("Inputs[" + i + "] = " + inputs[i]);
-        // }
-
-        MadelineNetwork ann = new MadelineNetwork(
+        MadelineNetwork model = new MadelineNetwork(
                 n,
                 labels,
                 configPanel.getToleratedError(),
                 configPanel.getLearningRate());
-                
-        System.out.println(ann);
 
-        ann.train(inputs, labels);
+        System.out.println(model);
 
+        model.train(inputs, labels);
     }
 
 }

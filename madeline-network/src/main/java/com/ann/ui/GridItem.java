@@ -22,6 +22,10 @@ public class GridItem {
         return Vector.flatten(gridDataVectors);
     }
 
+    public String getLabel() {
+        return label;
+    }
+
     public GridItem(int id, String label, int[][] gridData) {
         this.id = id;
         this.label = label;
