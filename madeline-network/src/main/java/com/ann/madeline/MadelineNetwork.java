@@ -1,91 +1,121 @@
 package com.ann.madeline;
 
+import java.util.ArrayList;
+
 import com.ann.util.Vector;
 
 public class MadelineNetwork {
 
-    private int n; // Tamanho de input
+    private int inputSize; // Tamanho de input
+    private int outputSize; // Tamanho da saída / quantidade de saídas
+
+    private ArrayList<Object> classes; // Classes
+    private Vector[] outputs; // Matriz One of Classes
     private Vector[] weigths; // Matriz de pesos
     private Vector biases; // Vetor de bias
 
-    private String[] labels; // Vetor de label
-    private Vector[] outputs; // Vetor One of Classes ou OBV
-
     private float maxError;
-    private float learningRate;
+    private float alpha;
 
-    public MadelineNetwork(int inputSize, String[] labels, float maxError, float learningRate) {
-        this.learningRate = learningRate;
+    public MadelineNetwork(int inputSize, Object[] classes, float maxError, float learningRate) {
         this.maxError = maxError;
-        this.labels = labels;
-        this.n = inputSize;
+        this.inputSize = inputSize;
+        outputSize = classes.length;
+        alpha = learningRate;
 
-        weigths = new Vector[labels.length];
-        for (int i = 0; i < weigths.length; i++) {
+        this.classes = new ArrayList<Object>(outputSize);
+        weigths = new Vector[outputSize];
+        outputs = new Vector[outputSize];
+
+        for (int i = 0; i < outputSize; i++) {
+            this.classes.add(classes[i]);
+
+            // Inicializando o vetor de pesos para essa classe
             weigths[i] = Vector.random(inputSize, -0.5f, +0.5f);
-        }
-
-        // One of classes
-        outputs = new Vector[labels.length];
-        for (int i = 0; i < labels.length; i++) {
-            outputs[i] = Vector.zeros(inputSize);
+            // Inicializando o vetor da matriz One of Classes para essa classe
+            outputs[i] = Vector.zeros(outputSize);
             outputs[i].set(i, 1.0f);
         }
 
-        biases = Vector.random(inputSize, -0.5f, +0.5f);
+        // Inicializando o vetor de bias
+        biases = Vector.random(outputSize, -0.5f, +0.5f);
+        System.out.println("biases = " + biases);
+
+        for (int i = 0; i < outputSize; i++) {
+            System.out.println("Outputs[" + i + "] = " + outputs[i]);
+        }
+
+        for (int i = 0; i < outputSize; i++) {
+            System.out.println("w[" + i + "] = " + weigths[i]);
+        }
+    }
+
+    public void train(Vector[] inputs, Object[] outputs) {
+        train(inputs, this.outputs);
     }
 
     public void train(Vector[] inputs, Vector[] targets) {
-        boolean trained = false;
-        int count = 0;
+        int epochs = 0;
+        float error = 0.0f;
 
-        while (!trained) {
-            trained = true;
+        System.out.println("Inicio do treinamento");
 
-            // Para cada input, atualiza os pesos para cada saída (target)
-            for (int i = 0; i < inputs.length; i++) {
-                Vector input = inputs[i];
+        do {
+            epochs++;
+            error = 0.0f;
 
-                // Testar o input com todas saídas
-                Vector yLiq = Vector.zeros(targets.length);
+            for (int k = 0; k < inputs.length; k++) {
 
-                // Calcular yLiq
-                for (int j = 0; j < weigths.length; j++) {
-                    Vector w = weigths[j];
-                    Vector inputXw = Vector.multiply(input, w);
-                    yLiq.set(j, inputXw.sum());
+                Vector x = inputs[k];
+                Vector t = targets[k];
+                // System.out.println("k = " + k + " ; x = " + x);
+                // System.out.println("k = " + k + " ; t = " + t);
+
+                // Calculando o vetor de saída y
+                Vector y = Vector.zeros(outputSize);
+
+                for (int i = 0; i < outputSize; i++) {
+                    Vector w = weigths[i];
+                    float yLiq = Vector.multiply(x, w).sum() + biases.get(i);
+                    y.set(i, (float) Math.tanh(yLiq));
                 }
 
-                yLiq.add(biases);
+                // System.out.println("k = " + k + " ; y = " + y);
 
-                Vector y = activationFunction(yLiq);
+                Vector d = Vector.subtract(t, y); // d = t - y
 
+                // System.out.println("k = " + k + " ; d = " + d);
+
+                // Calculando o erro
+                error += Vector.multiply(d, d).sum() / 2;
+
+                // Atualizando os pesos e bias
+                d.multiply(alpha); // d = d * alpha
+                for (int i = 0; i < outputSize; i++) {
+                    Vector w = weigths[i];
+                    w.add(Vector.multiply(x, d.get(i)));
+                }
+
+                biases.add(d);
             }
 
-        }
+            if (epochs % 100 == 0) {
+                System.out.println("epochs = " + epochs + " ; error = " + error);
+            }
 
-        System.out.println("Training tries: " + count);
+            // Condição de parada
+        } while (error > maxError && epochs < 1000 * 1000);
 
-    }
-
-    public Vector activationFunction(Vector yLiq) {
-        Vector v = Vector.zeros(n);
-        for (int i = 0; i < yLiq.size(); i++) {
-            v.set(i, activationFunction(yLiq.get(i)));
-        }
-        return v;
-    }
-
-    public int activationFunction(float yLiq) {
-        return yLiq >= 0.0f ? 1 : 0;
+        System.out.println("epochs = " + epochs + " ; error = " + error);
     }
 
     @Override
     public String toString() {
         return "MadelineNetwork{" +
-                "n=" + n +
-                ", maxError=" + maxError +
-                ", learningRate=" + learningRate +
+                "inputSize = " + inputSize +
+                "outputSize = " + outputSize +
+                ", maxError = " + maxError +
+                ", learningRate = " + alpha +
                 '}';
     }
 
