@@ -9,7 +9,7 @@ public class Vector {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append("[]");
+        sb.append("[");
         for (int i = 0; i < v.length; i++) {
             sb.append(v[i]);
             if (i < v.length - 1) {
@@ -59,7 +59,6 @@ public class Vector {
     }
 
     public static Vector flatten(Vector[] vectors) {
-        checkLengths(vectors);
         int n = vectors.length * vectors[0].v.length;
         Vector result = new Vector(new float[n]);
         int k = 0;
@@ -111,8 +110,9 @@ public class Vector {
         return true;
     }
 
-    public void add(Vector v) {
+    public Vector add(Vector v) {
         add(this, v, this);
+        return this;
     }
 
     public static Vector add(Vector a, Vector b) {
@@ -128,8 +128,27 @@ public class Vector {
         }
     }
 
-    public void multiply(Vector v) {
+    public Vector subtract(Vector v) {
+        subtract(this, v, this);
+        return this;
+    }
+
+    public static Vector subtract(Vector a, Vector b) {
+        Vector result = new Vector(a);
+        subtract(a, b, result);
+        return result;
+    }
+
+    public static void subtract(Vector a, Vector b, Vector result) {
+        checkLengths(a, b, result);
+        for (int i = 0; i < a.v.length; i++) {
+            result.v[i] = a.v[i] - b.v[i];
+        }
+    }
+
+    public Vector multiply(Vector v) {
         multiply(this, v, this);
+        return this;
     }
 
     public static Vector multiply(Vector a, Vector b) {
@@ -145,8 +164,9 @@ public class Vector {
         }
     }
 
-    public void multiply(float scalar) {
+    public Vector multiply(float scalar) {
         multiply(this, scalar, this);
+        return this;
     }
 
     public static Vector multiply(Vector a, float scalar) {
