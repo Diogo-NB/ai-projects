@@ -41,7 +41,7 @@ public class PixelGrid extends JPanel {
     }
 
     public int getPixelValue(int row, int col) {
-        return pixels[row][col].getBackground().equals(Color.WHITE) ? 1 : -1;
+        return pixels[row][col].getBackground().equals(Color.BLACK) ? 1 : 0;
     }
 
     public int[][] getGridData() {
