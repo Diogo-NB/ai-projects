@@ -86,29 +86,62 @@ public class TrainingFrame extends JFrame {
 
     public void train() {
 
-        int n = grid.getGridSize() * grid.getGridSize();
+        int inputSize = grid.getGridSize() * grid.getGridSize();
         // String[] labels = configPanel.getLabels();
 
         GridItem[] gridItems = gridsListPanel.getGridItems();
 
         Vector[] inputs = new Vector[gridItems.length];
 
+        Vector[] outputs = new Vector[gridItems.length]; // Vetor one of classes
+
         String[] labels = new String[inputs.length];
 
+        // Montando entradas e saídas
         for (int i = 0; i < inputs.length; i++) {
             inputs[i] = gridItems[i].getGridData();
             labels[i] = gridItems[i].getLabel();
+
+            outputs[i] = Vector.zeros(inputs.length);
+            outputs[i].set(i, 1);
+
+            // System.out.println("Outputs[" + i + "] = " + outputs[i]);
+            System.out.println("inputs[" + i + "] = " + inputs[i]);
         }
 
         MadelineNetwork model = new MadelineNetwork(
-                n,
-                labels,
+                inputSize,
+                labels.length,
                 configPanel.getToleratedError(),
                 configPanel.getLearningRate());
 
         System.out.println(model);
 
-        model.train(inputs, labels);
+        model.train(inputs, outputs);
+
+        TestingFrame testingFrame = new TestingFrame(grid.getGridSize(), model, labels, outputs);
+        testingFrame.setVisible(true);
+
+        // Vector y = model.test(inputs[0]);
+        // System.out.println(y);
+        // float minDistanceFound = Float.MAX_VALUE; // Menor distância encontrada
+        // String label = "NOT FOUND";
+
+        // // Para cada output, calcula a distância entre output e y
+        // for (int i = 0; i < outputs.length; i++) {
+        // Vector t = outputs[i];
+
+        // Vector d = Vector.subtract(t, y);
+        // d.multiply(d);
+        // float distance = (float) Math.sqrt(d.sum());
+        // if (distance < minDistanceFound) {
+        // minDistanceFound = distance;
+        // label = labels[i];
+        // }
+        // }
+
+        // System.out.println("Found " + label);
+
     }
 
 }

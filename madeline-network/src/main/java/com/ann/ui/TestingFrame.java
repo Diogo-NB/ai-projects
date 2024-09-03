@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.ann.madeline.MadelineNetwork;
+import com.ann.util.Vector;
 
 public class TestingFrame extends JFrame {
 
@@ -11,17 +12,14 @@ public class TestingFrame extends JFrame {
     private PixelGrid testGrid;
     private JPanel resultsPanel;
     private int resultIndex = 0;
-    private String grid1Label;
-    private String grid2Label;
+    private String[] labels;
+    private Vector[] outputs;
 
-    public TestingFrame(MadelineNetwork model) {
-        this(model, "Grid #1", "Grid #2");
-    }
-
-    public TestingFrame(MadelineNetwork model, String grid1Label, String grid2Label) {
-        this.grid1Label = grid1Label;
-        this.grid2Label = grid2Label;
+    public TestingFrame(int gridSize, MadelineNetwork model, String[] labels, Vector[] outputs) {
+        this.outputs = outputs;
+        this.labels = labels;
         this.model = model;
+
         setSize(620, 600);
         setResizable(false);
 
@@ -30,7 +28,7 @@ public class TestingFrame extends JFrame {
 
         JPanel gridsPanel = new JPanel();
         gridsPanel.setLayout(new GridLayout(1, 2, 10, 0));
-        testGrid = new PixelGrid(15);
+        testGrid = new PixelGrid(gridSize);
         gridsPanel.add(testGrid);
 
         resultsPanel = new JPanel();
@@ -51,6 +49,10 @@ public class TestingFrame extends JFrame {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         buttonPanel.add(testButton);
 
+        JButton clrGridBt = new JButton("Clear Grid");
+        buttonPanel.add(clrGridBt);
+        clrGridBt.addActionListener(e -> testGrid.clear());
+
         mainPanel.add(gridsPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         mainPanel.add(resultsPanel, BorderLayout.EAST);
@@ -59,18 +61,28 @@ public class TestingFrame extends JFrame {
     }
 
     public void testModelAction() {
-        // int[][] testGridData = testGrid.getGridData();
-        // int[] testInput = CollectionsUtil.flatten(testGridData);
+        Vector testInput = testGrid.getGridData();
+        Vector y = model.test(testInput);
+        System.out.println(y);
+        float minDistanceFound = Float.MAX_VALUE; // Menor distância encontrada
+        String label = "NOT FOUND";
 
-        // // Add the results to the results panel
-        // float result = model.test(testInput);
-        // if (result >= 0.0f) {
-        // resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid1Label));
-        // } else {
-        // resultsPanel.add(new JLabel("#" + resultIndex++ + " " + grid2Label));
-        // }
+        // Para cada output, calcula a distância entre output e y
+        for (int i = 0; i < outputs.length; i++) {
+            Vector t = outputs[i];
 
-        // resultsPanel.revalidate();
-        // resultsPanel.repaint();
+            Vector d = Vector.subtract(t, y);
+            d.multiply(d);
+            float distance = (float) Math.sqrt(d.sum());
+            if (distance < minDistanceFound) {
+                minDistanceFound = distance;
+                label = labels[i];
+            }
+        }
+
+        resultsPanel.add(new JLabel("#" + resultIndex++ + " " + label));
+
+        resultsPanel.revalidate();
+        resultsPanel.repaint();
     }
 }

@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.ann.util.Vector;
+
 public class PixelGrid extends JPanel {
 
     private int size;
@@ -44,16 +46,17 @@ public class PixelGrid extends JPanel {
         return pixels[row][col].getBackground().equals(Color.BLACK) ? 1 : 0;
     }
 
-    public int[][] getGridData() {
-        int[][] gridData = new int[size][size];
+    public Vector getGridData() {
+        Vector v = Vector.zeros(size * size);
+        int k = 0;
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                gridData[i][j] = getPixelValue(i, j);
+                v.set(k++, getPixelValue(i, j));
             }
         }
 
-        return gridData;
+        return v;
     }
 
     public void clear() {

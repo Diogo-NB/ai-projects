@@ -8,25 +8,21 @@ public class GridItem {
 
     private String label;
 
-    private int[][] gridData;
+    private Vector gridData;
 
     public int getGridSize() {
-        return gridData.length;
+        return gridData.size();
     }
 
     public Vector getGridData() {
-        Vector[] gridDataVectors = new Vector[gridData.length];
-        for (int i = 0; i < gridData.length; i++) {
-            gridDataVectors[i] = new Vector(gridData[i]);
-        }
-        return Vector.flatten(gridDataVectors);
+        return gridData;
     }
 
     public String getLabel() {
         return label;
     }
 
-    public GridItem(int id, String label, int[][] gridData) {
+    public GridItem(int id, String label, Vector gridData) {
         this.id = id;
         this.label = label;
         this.gridData = gridData;
