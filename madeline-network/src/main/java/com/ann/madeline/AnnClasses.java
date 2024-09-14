@@ -59,6 +59,20 @@ public class AnnClasses<T> {
         return vectors;
     }
 
+    public Vector getClassArray(T clazz) {
+        int index = -1;
+        for (int i = 0; i < classes.length; i++) {
+            if (classes[i].equals(clazz)) {
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            throw new IllegalArgumentException("Class not found");
+        }
+        return new Vector(classesArrays[index]);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -3,6 +3,8 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import java.util.*;
+
 import com.ann.madeline.AnnClasses;
 import com.ann.madeline.MadelineNetwork;
 import com.ann.madeline.ObvClasses;
@@ -61,7 +63,7 @@ public class TrainingFrame extends JFrame {
                 return;
             }
 
-            gridsListPanel.addGrid(new GridItem(listIndex++, label, grid.getGridData()));
+            gridsListPanel.addGrid(new GridItem(listIndex++, label.toUpperCase(), grid.getGridData()));
         });
 
         JButton rmGridBt = new JButton("Remove Grid");
@@ -89,25 +91,30 @@ public class TrainingFrame extends JFrame {
     public void train() {
 
         int inputSize = grid.getGridSize() * grid.getGridSize();
-        // String[] labels = configPanel.getLabels();
 
         GridItem[] gridItems = gridsListPanel.getGridItems();
 
         Vector[] inputs = new Vector[gridItems.length];
 
-        String[] labels = new String[inputs.length];
+        Set<String> labels = new HashSet<>();
 
         // Montando entradas e saídas
         for (int i = 0; i < inputs.length; i++) {
+            labels.add(gridItems[i].getLabel().toUpperCase());
             inputs[i] = gridItems[i].getGridData();
-            labels[i] = gridItems[i].getLabel();
 
             System.out.println("inputs[" + i + "] = " + inputs[i]);
         }
 
-        AnnClasses<String> annClasses = new ObvClasses<>(labels);
+        AnnClasses<String> annClasses = new ObvClasses<>(labels.toArray(new String[0]));
 
-        Vector[] outputs = annClasses.getClassesArrays(); // Vetor One of Classes ou OBV
+        Vector[] outputs = new Vector[inputs.length];
+
+        for (int i = 0; i < outputs.length; i++) {
+            String inputLabel = gridItems[i].getLabel().toUpperCase();
+            Vector inputTarget = annClasses.getClassArray(inputLabel);
+            outputs[i] = inputTarget;
+        }
 
         int outputSize = outputs[0].size();
         MadelineNetwork model = new MadelineNetwork(
@@ -115,14 +122,6 @@ public class TrainingFrame extends JFrame {
                 outputSize,
                 configPanel.getToleratedError(),
                 configPanel.getLearningRate());
-
-        System.out.println(model);
-
-        System.out.println(annClasses);
-
-        for (int i = 0; i < outputs.length; i++) {
-            System.out.println(outputs[i]);
-        }
 
         model.train(inputs, outputs);
 
