@@ -52,14 +52,10 @@ public class TrainingFrame extends JFrame {
         JButton addGridBt = new JButton("Add Grid");
         buttonPanel.add(addGridBt);
         addGridBt.addActionListener(e -> {
-            // String label = configPanel.getSelectedLabel();
-
             String label = JOptionPane.showInputDialog(this, "Enter a label:", "Label Input",
                     JOptionPane.INFORMATION_MESSAGE);
 
             if (label == null || label.isEmpty()) {
-                // JOptionPane.showMessageDialog(this, "Select a label", "Error",
-                // JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -102,13 +98,11 @@ public class TrainingFrame extends JFrame {
         for (int i = 0; i < inputs.length; i++) {
             labels.add(gridItems[i].getLabel().toUpperCase());
             inputs[i] = gridItems[i].getGridData();
-
-            System.out.println("inputs[" + i + "] = " + inputs[i]);
         }
 
         AnnClasses<String> annClasses;
 
-        if (configPanel.getClassesType().equals("ObvClasses")) {
+        if (configPanel.getClassesType().equals("OBV")) {
             annClasses = new ObvClasses<>(labels.toArray(new String[0]));
         } else {
             annClasses = new AnnClasses<>(labels.toArray(new String[0]));
@@ -128,6 +122,8 @@ public class TrainingFrame extends JFrame {
                 outputSize,
                 configPanel.getToleratedError(),
                 configPanel.getLearningRate());
+
+        System.out.println(model);      
 
         model.train(inputs, outputs);
 
