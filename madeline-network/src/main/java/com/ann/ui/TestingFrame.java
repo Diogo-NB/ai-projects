@@ -3,6 +3,7 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import com.ann.madeline.AnnClasses;
 import com.ann.madeline.MadelineNetwork;
 import com.ann.util.Vector;
 
@@ -12,12 +13,10 @@ public class TestingFrame extends JFrame {
     private PixelGrid testGrid;
     private JPanel resultsPanel;
     private int resultIndex = 0;
-    private String[] labels;
-    private Vector[] outputs;
+    private AnnClasses<String> classes;
 
-    public TestingFrame(int gridSize, MadelineNetwork model, String[] labels, Vector[] outputs) {
-        this.outputs = outputs;
-        this.labels = labels;
+    public TestingFrame(int gridSize, MadelineNetwork model, AnnClasses<String> classes) {
+        this.classes = classes;
         this.model = model;
 
         setSize(620, 600);
@@ -63,23 +62,23 @@ public class TestingFrame extends JFrame {
     public void testModelAction() {
         Vector testInput = testGrid.getGridData();
         Vector y = model.test(testInput);
-        System.out.println(y);
-        float minDistanceFound = Float.MAX_VALUE; // Menor distância encontrada
-        String label = "NOT FOUND";
+        String label = classes.getClass(y);
+        // System.out.println(y);
+        // float minDistanceFound = Float.MAX_VALUE; // Menor distância encontrada
+        // String label = "NOT FOUND";
 
-        // Para cada output, calcula a distância entre output e y
-        for (int i = 0; i < outputs.length; i++) {
-            Vector t = outputs[i];
+        // // Para cada output, calcula a distância entre output e y
+        // for (int i = 0; i < outputs.length; i++) {
+        //     Vector t = outputs[i];
 
-            Vector d = Vector.subtract(t, y);
-            d.multiply(d);
-            float distance = (float) Math.sqrt(d.sum());
-            if (distance < minDistanceFound) {
-                minDistanceFound = distance;
-                label = labels[i];
-            }
-        }
-
+        //     Vector d = Vector.subtract(t, y);
+        //     d.multiply(d);
+        //     float distance = (float) Math.sqrt(d.sum());
+        //     if (distance < minDistanceFound) {
+        //         minDistanceFound = distance;
+        //         label = labels[i];
+        //     }
+        // }
         resultsPanel.add(new JLabel("#" + resultIndex++ + " " + label));
 
         resultsPanel.revalidate();

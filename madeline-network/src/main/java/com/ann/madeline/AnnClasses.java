@@ -1,5 +1,7 @@
 package com.ann.madeline;
 
+import com.ann.util.Vector;
+
 public class AnnClasses<T> {
 
     protected T[] classes;
@@ -22,14 +24,39 @@ public class AnnClasses<T> {
 
         for (int i = 0; i < classesArrays.length; i++) {
             for (int j = 0; j < classesArrays[i].length; j++) {
-                classesArrays[i][j] = -1;
+                classesArrays[i][j] = 0;
             }
             classesArrays[i][i] = 1;
         }
     }
 
-    public T getClass(int index) {
-        return classes[index];
+    public T getClass(Vector y) {
+        System.out.println(y);
+        float minDistanceFound = Float.MAX_VALUE; // Menor distância encontrada
+        T clazz = null;
+        Vector[] outputs = getClassesArrays();
+
+        // Para cada output, calcula a distância entre output e y
+        for (int i = 0; i < outputs.length; i++) {
+            Vector t = outputs[i];
+
+            Vector d = Vector.subtract(t, y);
+            d.multiply(d);
+            float distance = (float) Math.sqrt(d.sum());
+            if (distance < minDistanceFound) {
+                minDistanceFound = distance;
+                clazz = classes[i];
+            }
+        }
+        return clazz;
+    }
+
+    public Vector[] getClassesArrays() {
+        Vector[] vectors = new Vector[classesSize];
+        for (int i = 0; i < classesSize; i++) {
+            vectors[i] = new Vector(classesArrays[i]);
+        }
+        return vectors;
     }
 
     @Override

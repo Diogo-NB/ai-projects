@@ -9,7 +9,7 @@ public class ObvClasses<T> extends AnnClasses<T> {
         if (classesSize < 2) {
             throw new IllegalArgumentException("Classes array must have at least two elements");
         }
-        
+
         classesArrays = new int[][] { { 1, 1 }, { 1, -1 } };
 
         while (classesArrays.length != classesSize) {

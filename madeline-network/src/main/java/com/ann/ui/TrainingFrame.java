@@ -3,7 +3,9 @@ package com.ann.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import com.ann.madeline.AnnClasses;
 import com.ann.madeline.MadelineNetwork;
+import com.ann.madeline.ObvClasses;
 import com.ann.util.Vector;
 
 public class TrainingFrame extends JFrame {
@@ -93,8 +95,6 @@ public class TrainingFrame extends JFrame {
 
         Vector[] inputs = new Vector[gridItems.length];
 
-        Vector[] outputs = new Vector[gridItems.length]; // Vetor one of classes
-
         String[] labels = new String[inputs.length];
 
         // Montando entradas e saídas
@@ -102,46 +102,32 @@ public class TrainingFrame extends JFrame {
             inputs[i] = gridItems[i].getGridData();
             labels[i] = gridItems[i].getLabel();
 
-            outputs[i] = Vector.zeros(inputs.length);
-            outputs[i].set(i, 1);
-
-            // System.out.println("Outputs[" + i + "] = " + outputs[i]);
             System.out.println("inputs[" + i + "] = " + inputs[i]);
         }
 
+        AnnClasses<String> annClasses = new ObvClasses<>(labels);
+
+        Vector[] outputs = annClasses.getClassesArrays(); // Vetor One of Classes ou OBV
+
+        int outputSize = outputs[0].size();
         MadelineNetwork model = new MadelineNetwork(
                 inputSize,
-                labels.length,
+                outputSize,
                 configPanel.getToleratedError(),
                 configPanel.getLearningRate());
 
         System.out.println(model);
 
+        System.out.println(annClasses);
+
+        for (int i = 0; i < outputs.length; i++) {
+            System.out.println(outputs[i]);
+        }
+
         model.train(inputs, outputs);
 
-        TestingFrame testingFrame = new TestingFrame(grid.getGridSize(), model, labels, outputs);
+        TestingFrame testingFrame = new TestingFrame(grid.getGridSize(), model, annClasses);
         testingFrame.setVisible(true);
-
-        // Vector y = model.test(inputs[0]);
-        // System.out.println(y);
-        // float minDistanceFound = Float.MAX_VALUE; // Menor distância encontrada
-        // String label = "NOT FOUND";
-
-        // // Para cada output, calcula a distância entre output e y
-        // for (int i = 0; i < outputs.length; i++) {
-        // Vector t = outputs[i];
-
-        // Vector d = Vector.subtract(t, y);
-        // d.multiply(d);
-        // float distance = (float) Math.sqrt(d.sum());
-        // if (distance < minDistanceFound) {
-        // minDistanceFound = distance;
-        // label = labels[i];
-        // }
-        // }
-
-        // System.out.println("Found " + label);
-
     }
 
 }
