@@ -11,13 +11,13 @@ public class MadelineNetwork {
     private Vector biases; // Vetor de bias
 
     private float maxError;
-    private float alpha;
+    private float learningRate;
 
     public MadelineNetwork(int inputSize, int outputSize, float maxError, float learningRate) {
         this.maxError = maxError;
         this.inputSize = inputSize;
         this.outputSize = outputSize;
-        alpha = learningRate;
+        this.learningRate = learningRate;
 
         weigths = new Vector[outputSize];
         for (int i = 0; i < outputSize; i++) {
@@ -55,23 +55,17 @@ public class MadelineNetwork {
 
                 Vector x = inputs[k];
                 Vector t = targets[k];
-                // System.out.println("k = " + k + " ; x = " + x);
-                // System.out.println("k = " + k + " ; t = " + t);
 
                 // Calculando o vetor de saída y
                 Vector y = test(x);
 
-                // System.out.println("k = " + k + " ; y = " + y);
-
                 Vector d = Vector.subtract(t, y); // d = t - y
-
-                // System.out.println("k = " + k + " ; d = " + d);
 
                 // Calculando o erro
                 error += Vector.multiply(d, d).sum() / 2;
 
                 // Atualizando os pesos e bias
-                d.multiply(alpha); // d = d * alpha
+                d.multiply(learningRate); // d = d * learningRate
                 for (int i = 0; i < outputSize; i++) {
                     Vector w = weigths[i];
                     w.add(Vector.multiply(x, d.get(i)));
@@ -96,7 +90,7 @@ public class MadelineNetwork {
                 "inputSize = " + inputSize +
                 ", outputSize = " + outputSize +
                 ", maxError = " + maxError +
-                ", learningRate = " + alpha +
+                ", learningRate = " + learningRate +
                 '}';
     }
 
