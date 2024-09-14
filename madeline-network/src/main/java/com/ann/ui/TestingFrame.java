@@ -63,22 +63,7 @@ public class TestingFrame extends JFrame {
         Vector testInput = testGrid.getGridData();
         Vector y = model.test(testInput);
         String label = classes.getClass(y);
-        // System.out.println(y);
-        // float minDistanceFound = Float.MAX_VALUE; // Menor distância encontrada
-        // String label = "NOT FOUND";
 
-        // // Para cada output, calcula a distância entre output e y
-        // for (int i = 0; i < outputs.length; i++) {
-        //     Vector t = outputs[i];
-
-        //     Vector d = Vector.subtract(t, y);
-        //     d.multiply(d);
-        //     float distance = (float) Math.sqrt(d.sum());
-        //     if (distance < minDistanceFound) {
-        //         minDistanceFound = distance;
-        //         label = labels[i];
-        //     }
-        // }
         resultsPanel.add(new JLabel("#" + resultIndex++ + " " + label));
 
         resultsPanel.revalidate();

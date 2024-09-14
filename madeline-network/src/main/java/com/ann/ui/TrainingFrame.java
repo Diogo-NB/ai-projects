@@ -106,7 +106,13 @@ public class TrainingFrame extends JFrame {
             System.out.println("inputs[" + i + "] = " + inputs[i]);
         }
 
-        AnnClasses<String> annClasses = new ObvClasses<>(labels.toArray(new String[0]));
+        AnnClasses<String> annClasses;
+
+        if (configPanel.getClassesType().equals("ObvClasses")) {
+            annClasses = new ObvClasses<>(labels.toArray(new String[0]));
+        } else {
+            annClasses = new AnnClasses<>(labels.toArray(new String[0]));
+        }
 
         Vector[] outputs = new Vector[inputs.length];
 

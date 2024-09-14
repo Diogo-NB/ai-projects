@@ -8,6 +8,7 @@ public class ConfigurationPanel extends JPanel {
     private GridBagConstraints gbc;
     private LabeledComponent gridSizeField;
     private LabeledComponent learningRateField;
+    private LabeledComponent classesTypeField;
 
     @Override
     public Component add(Component comp) {
@@ -22,6 +23,10 @@ public class ConfigurationPanel extends JPanel {
 
     public float getLearningRate() {
         return (float) learningRateField.getValue();
+    }
+
+    public String getClassesType() {
+        return (String) classesTypeField.getValue();
     }
 
     public ConfigurationPanel() {
@@ -64,6 +69,19 @@ public class ConfigurationPanel extends JPanel {
         };
         add(learningRateField);
 
+        String[] options = { "OBV", "One of Classes" };
+        JComboBox<String> comboBox = new JComboBox<>(options);
+        comboBox.setPreferredSize(new Dimension(120, 20));
+        classesTypeField = new LabeledComponent("Classes: ", comboBox) {
+
+            @Override
+            public Object getValue() {
+                return comboBox.getSelectedItem();
+            }
+
+        };
+
+        add(classesTypeField);
     }
 
 }
