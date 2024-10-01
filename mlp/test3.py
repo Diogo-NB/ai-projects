@@ -1,29 +1,21 @@
 import numpy as np
 from mlp import MLP
 
-x = [
-    np.array([1, 1]),
-    np.array([1, -1]),
-    np.array([-1, 1]),
-    np.array([-1, -1])
-]
+fn = lambda x1, x2: np.sin(x1) ** 2 + np.cos(x2) ** 2
+fn = np.vectorize(fn)
 
-t0 = np.array([1, -1])
-t1 = np.array([-1, -1])
+n = 10
+aux = np.linspace(-1.75, +1.75, n)
 
-t = [
-    t0,
-    t1,
-    t1,
-    t0
-]
+x = np.zeros((n*n, 2))
+y = np.zeros((n*n, 1))
 
-mlp = MLP(layers_sizes=[len(x[0]), 4, len(t[0])], tolerated_error=1e-3, learning_rate=0.01)
+for i in range(n):
+    for j in range(n):
+        k = i*n + j
+        x[k] = [aux[i], aux[j]]
+        y[k] = fn(aux[i], aux[j])
 
-total_error, epochs = mlp.train(inputs=x, targets=t)
+mlp = MLP(layers_sizes=[2, 2, 2, 2, 1], learning_rate=0.1, tolerated_error=1e-4)
 
-for i in range(len(x)):
-    y = mlp.predict(x[i])
-    print(f"{x[i]} -> {y} == {t[i]}")
-
-print(total_error, epochs)
+total_error, epochs = mlp.train(inputs=x, targets=y)

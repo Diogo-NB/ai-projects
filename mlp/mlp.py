@@ -56,7 +56,7 @@ class MLP:
 
         self.layers_connections = layers_connections
 
-    def train(self, inputs: list[ndarray], targets: list[ndarray]):
+    def train(self, inputs: ndarray, targets: ndarray):
         alpha, max_epochs, tolerated_error = self.alpha, self.max_epochs, self.tolerated_error
         layers_connections = self.layers_connections
         epochs = 0
@@ -66,7 +66,7 @@ class MLP:
             epochs += 1
             total_error = 0.0
 
-            for i in range(len(inputs)):
+            for i in range(inputs.shape[0]):
                 x = inputs[i]
                 t = targets[i]
                 z = x
@@ -90,7 +90,6 @@ class MLP:
 
                     delta = new_delta
 
-
             if epochs % 200 == 0: print(f"{epochs=} , {total_error=}")  
         return total_error, epochs
     
@@ -102,32 +101,3 @@ class MLP:
             x = z
         y = z
         return y
-    
-# k = 0
-# w1 = np.array([
-#     [0.12, -0.03],
-#     [-0.04, 0.15],
-#     [0.31, -0.41],
-# ])
-# w2 = np.array([
-#     [-0.05, -0.34, 0.21],
-#     [0.19, -0.09, 0.26]
-# ])
-# test_w = [w1, w2]
-
-# b1 = np.array([-0.09, 0.18])
-# b2 = np.array([0.18, -0.27, -0.12])
-# test_b = [b1, b2]
-
-# mlp = MLP(layers_sizes=[3, 2, 3], initial_state=[(w1, b1), (w2, b2)])   
-
-# inputs_data = [1, 0.5, -1]
-# outputs_data = [1, -1, -1]
-
-# total_error, epochs = mlp.train(inputs=np.array([inputs_data]), targets=np.array([outputs_data]))
-
-# print(mlp.layers_connections[0].w)
-# print(mlp.layers_connections[0].b)
-# print("-------------------------")
-# print(mlp.layers_connections[1].w)
-# print(mlp.layers_connections[1].b)
