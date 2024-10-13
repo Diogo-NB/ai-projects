@@ -10,10 +10,10 @@ np.random.seed(42)
 matplotlib.use('Agg')
 
 x = np.linspace(0, 2 * np.pi, 100)
-t = np.sin(x)
+t = np.sin(x) + np.random.normal(0, 0.1, x.shape)
 
 x = x.reshape((-1, 1))
-t = np.sin(x) + np.random.normal(0, 0.1, x.shape)
+t = t.reshape((-1, 1))
 
 hidden_layers_sizes = [
     [100],
