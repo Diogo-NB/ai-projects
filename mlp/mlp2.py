@@ -58,18 +58,21 @@ class MLP:
         self.layers[1].w -= alpha * np.dot(self.layers[0].z.T, g)
         self.layers[1].b -= alpha * np.sum(g, axis=0)
 
-        g = np.dot(g, self.layers[1].w.T) * self.layers[0].z * (1 - self.layers[0].z)
+        g = np.dot(g, self.layers[1].w.T) * (1 + self.layers[0].z) * (1 - self.layers[0].z)
         
         self.layers[0].w -= alpha * np.dot(x.T, g)
         self.layers[0].b -= alpha * np.sum(g, axis=0) 
 
-    def train(self, x: ndarray, y: ndarray, learning_rate = 0.1, max_epochs = 100000):
-        for epoch in range(max_epochs):
+    def train(self, x: ndarray, y: ndarray, learning_rate = 0.01, tolerated_error = 1e-8, max_epochs = 100000):
+        epoch = 0
+        error = float('inf')
+        while error > tolerated_error and epoch < max_epochs:
+            epoch += 1
             output = self.forward(x)
             self.backward(x, y, output, learning_rate)
-            if (epoch+1) % 1000 == 0:
-                loss = -np.sum(y * np.log(output)) / x.shape[0]
-                print(f'Epoch {epoch+1}, Loss: {loss:.4f}')
+            error = 0.5 * np.sum((output - y) ** 2)
+            if epoch % 1000 == 0:
+                print(f'Epoch {epoch}, Error: {error}')
 
     def predict(self, x):
         return self.forward(x)
