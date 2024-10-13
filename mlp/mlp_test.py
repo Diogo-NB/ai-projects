@@ -6,29 +6,31 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 
-np.random.seed(42)
+np.random.seed(122)
 
 matplotlib.use('Agg')
 
-test_name = "seno_ruido"
+def normalize_array(arr):
+    norm_arr = (arr - np.min(arr)) / (np.max(arr) - np.min(arr))
+    return norm_arr
+
+test_name = "exp_sin"
 
 test_results_dir = "tests"
 
-x = np.linspace(-1, +1, 100)
-t = np.sin(x) + np.random.normal(0, 0.1, x.shape)
+x = np.linspace(0, 2 * np.pi, 100)
+t = np.exp(-x) * np.sin(10 * x)
+t = normalize_array(t)
 
 x = x.reshape((-1, 1))
 t = t.reshape((-1, 1))
 
 hidden_layers_sizes = [
-    [50, 50, 50, 50, 50, 50],
-    [30, 30, 30, 30, 30, 30, 30, 30],
-    [100, 90, 80, 70, 60, 50, 40, 30, 20, 10],
-    [75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75]
+    [200, 150, 100, 50, 33, 15, 5]
 ]
 
 learning_rate = 0.01
-max_epochs : int = 25000
+max_epochs : int = 15000
 
 def test_ada_grad_mlp(i):
 
@@ -71,7 +73,7 @@ with ThreadPoolExecutor(max_workers=4) as executor:
 
         plt.close()   
 
-    print("All results saved")    
+    print("All results saved - adagrad")    
 
 # with ThreadPoolExecutor(max_workers=4) as executor:
 #     results = executor.map(test_linear_grad_mlp, range(len(hidden_layers_sizes)))
@@ -88,4 +90,6 @@ with ThreadPoolExecutor(max_workers=4) as executor:
 
 #         plt.savefig(f"{test_results_dir}/lineargrad/{test_name}_{i + 1}.png", format='png')
 
-#         plt.close()            
+#         plt.close()  
+
+#         print("All results saved - lineargrad")           
