@@ -81,8 +81,8 @@ class MLP:
             output = self.forward(x)
             self.backward(x, y, output, learning_rate)
             error = 0.5 * np.sum((output - y) ** 2)
-            if epoch % 5000 == 0:
-                print(f'Epoch {epoch}, Error: {error}')
+            # if epoch % 5000 == 0:
+            #     print(f'Epoch {epoch}, Error: {error}')
 
         return error, epoch                
 
