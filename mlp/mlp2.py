@@ -47,13 +47,13 @@ class MLP:
             
         return z
     
-    def backward(self, x: ndarray, y: ndarray, output: ndarray, alpha: np.float64) -> None:
+    def backward(self, x: ndarray, y: ndarray, output: ndarray, alpha) -> None:
         g = output - y
         
-        # self.layers[2].w -= alpha * np.dot(self.layers[1].z.T, g)
-        # self.layers[2].b -= alpha * np.sum(g, axis=0)
+        self.layers[2].w -= alpha * np.dot(self.layers[1].z.T, g)
+        self.layers[2].b -= alpha * np.sum(g, axis=0)
 
-        # g = np.dot(g, self.layers[2].w.T) * self.layers[1].z * (1 - self.layers[1].z)
+        g = np.dot(g, self.layers[2].w.T) * self.layers[1].z * (1 - self.layers[1].z)
 
         self.layers[1].w -= alpha * np.dot(self.layers[0].z.T, g)
         self.layers[1].b -= alpha * np.sum(g, axis=0)
@@ -71,21 +71,21 @@ class MLP:
             output = self.forward(x)
             self.backward(x, y, output, learning_rate)
             error = 0.5 * np.sum((output - y) ** 2)
-            if epoch % 1000 == 0:
+            if epoch % 5000 == 0:
                 print(f'Epoch {epoch}, Error: {error}')
 
     def predict(self, x):
         return self.forward(x)
                       
-x = np.linspace(0, 1, 10)
+x = np.linspace(0, 2 * np.pi, 100)
 t = np.sin(x)
 
 x = x.reshape((-1, 1))
 t = t.reshape((-1, 1))
 
-mlp = MLP([1, 50, 1])
+mlp = MLP([1, 50, 50, 1])
 
-mlp.train(x, t)
+mlp.train(x, t, learning_rate=0.001)
 
 y = mlp.predict(x)
 
