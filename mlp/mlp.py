@@ -1,87 +1,100 @@
 import numpy as np
 from numpy import ndarray
+import matplotlib.pyplot as plt
+
+# setting random seed for reproducibility
+np.random.seed(42)
 
 class MLP:
 
-    class LayerConnection:
-        random_init_limits = (-0.1, +0.1)
+    class Layer:
+        random_init_limits = (-0.25, +0.25)
 
         def __init__(self, n_inputs: int, n_outputs: int):
             lower_bound, upper_bound = self.random_init_limits
 
             self.w = np.random.uniform(lower_bound, upper_bound, (n_inputs, n_outputs))                
-            self.b = np.random.uniform(lower_bound, upper_bound, n_outputs)      
+            self.b = np.random.uniform(lower_bound, upper_bound, n_outputs)
+
+            self.z : ndarray = np.array([[]])
     
-    def __init__(self, layers_sizes: list[int], learning_rate: float = 0.01, tolerated_error: float = 0.005, max_epochs: int = 100000):
-        self.learning_rate = learning_rate
-        self.tolerated_error = tolerated_error
-        self.max_epochs = max_epochs
-        self.n_layers = len(layers_sizes)
+    def __init__(self, layers_sizes: list[int]):
+        layers: list[MLP.Layer] = []
 
-        layers_connections: list[MLP.LayerConnection] = []
+        for i in range(len(layers_sizes) - 1):
+            mlp_layer_connection = MLP.Layer(layers_sizes[i], layers_sizes[i + 1])
+            layers.append(mlp_layer_connection)
 
-        for i in range(self.n_layers - 1):
-            mlp_layer_connection = MLP.LayerConnection(layers_sizes[i], layers_sizes[i + 1])
-            layers_connections.append(mlp_layer_connection)
+        self.layers = layers
 
-        self.layers_connections = layers_connections
+    def print_weigths(self):
+        for i, layer in enumerate(self.layers):
+            print(f'Layer {i + 1}')
+            print(f'Weights: {layer.w}')
+            print(f'Biases: {layer.b}')
+            print()
 
-    def train(self, inputs: ndarray, targets: ndarray):
-        learning_rate, max_epochs, tolerated_error, layers_connections = self.learning_rate, self.max_epochs, self.tolerated_error, self.layers_connections
-        epochs = 0
-        alpha = learning_rate
-        total_error = float('inf')
-        x = inputs
-        t = targets
-
-        while total_error > tolerated_error and epochs < max_epochs:
-            epochs += 1
-            total_error = 0.0
-
-            z_list : list[ndarray] = [x]
-            for layer_conn in layers_connections:
-                w = layer_conn.w
-                b = layer_conn.b
-                zin = np.dot(z_list[-1], w) + b
-                z = np.tanh(zin) # activation function
-                z_list.append(z)
-
-            y = z
-
-            dif = t - y
-
-            total_error += 0.5 * np.sum(dif ** 2)
-
-            g = dif * (1 - y) * (1 + y)
-
-            # backpropagation
-            for i in range(len(layers_connections) - 1, -1, -1):
-                layer_conn = layers_connections[i]
-                z = z_list[i]
-
-                if i > 0:
-                    new_g = np.dot(g, layer_conn.w.T) * (1 - z) * (1 + z)
-
-                g_w = alpha * np.dot(z.T, g) 
-                g_b = alpha * np.sum(g, axis=0)
-                layer_conn.w += g_w
-                layer_conn.b += g_b
-
-                g = new_g
-            
-            if epochs % 1000 == 0: print(f"{epochs=} , {total_error=}, {alpha=}")
-
-        return total_error, epochs
+    def act_fn(self, x) -> ndarray:
+        return np.tanh(x)
     
-    def predict(self, inputs: ndarray):
-        x = inputs
-        layers_connections = self.layers_connections
-
+    def forward(self, x: ndarray) -> ndarray:
+        layers = self.layers
         z = x
-        for layer_conn in layers_connections:
-            w = layer_conn.w
-            b = layer_conn.b
-            zin = np.dot(z, w) + b
-            z = np.tanh(zin)
-
+        for layer in layers:
+            zin = np.dot(z, layer.w) + layer.b
+            z = self.act_fn(zin)
+            layer.z = z
+            
         return z
+    
+    def backward(self, x: ndarray, y: ndarray, output: ndarray, alpha) -> None:
+        g = output - y
+
+        for i in range(len(self.layers) -1, 0, -1):
+            self.layers[i].w -= alpha * np.dot(self.layers[i - 1].z.T, g)
+            self.layers[i].b -= alpha * np.sum(g, axis=0)
+
+            g = np.dot(g, self.layers[i].w.T) * (1 + self.layers[i - 1].z) * (1 - self.layers[i - 1].z)
+        
+        # self.layers[2].w -= alpha * np.dot(self.layers[1].z.T, g)
+        # self.layers[2].b -= alpha * np.sum(g, axis=0) 0.0013497964524862751
+
+        # g = np.dot(g, self.layers[2].w.T) * (1 + self.layers[1].z) * (1 - self.layers[1].z)
+
+        # self.layers[1].w -= alpha * np.dot(self.layers[0].z.T, g)
+        # self.layers[1].b -= alpha * np.sum(g, axis=0)
+
+        # g = np.dot(g, self.layers[1].w.T) * (1 + self.layers[0].z) * (1 - self.layers[0].z)
+        
+        self.layers[0].w -= alpha * np.dot(x.T, g)
+        self.layers[0].b -= alpha * np.sum(g, axis=0) 
+
+    def train(self, x: ndarray, y: ndarray, learning_rate = 0.01, tolerated_error = 1e-8, max_epochs = 100000):
+        epoch = 0
+        error = float('inf')
+        while error > tolerated_error and epoch < max_epochs:
+            epoch += 1
+            output = self.forward(x)
+            self.backward(x, y, output, learning_rate)
+            error = 0.5 * np.sum((output - y) ** 2)
+            if epoch % 5000 == 0:
+                print(f'Epoch {epoch}, Error: {error}')
+
+    def predict(self, x):
+        return self.forward(x)
+                      
+x = np.linspace(0, 2 * np.pi, 100)
+t = np.sin(x)
+
+x = x.reshape((-1, 1))
+t = t.reshape((-1, 1))
+
+mlp = MLP([1, 50, 50, 1])
+
+mlp.train(x, t, learning_rate=0.001)
+
+y = mlp.predict(x)
+
+plt.plot(x, t, color='blue', label='target')
+plt.plot(x, y, color='green', label='predicted')
+plt.show()
