@@ -49,16 +49,22 @@ class MLP:
     
     def backward(self, x: ndarray, y: ndarray, output: ndarray, alpha) -> None:
         g = output - y
+
+        for i in range(len(self.layers) -1, 0, -1):
+            self.layers[i].w -= alpha * np.dot(self.layers[i - 1].z.T, g)
+            self.layers[i].b -= alpha * np.sum(g, axis=0)
+
+            g = np.dot(g, self.layers[i].w.T) * (1 + self.layers[i - 1].z) * (1 - self.layers[i - 1].z)
         
-        self.layers[2].w -= alpha * np.dot(self.layers[1].z.T, g)
-        self.layers[2].b -= alpha * np.sum(g, axis=0)
+        # self.layers[2].w -= alpha * np.dot(self.layers[1].z.T, g)
+        # self.layers[2].b -= alpha * np.sum(g, axis=0) 0.0013497964524862751
 
-        g = np.dot(g, self.layers[2].w.T) * self.layers[1].z * (1 - self.layers[1].z)
+        # g = np.dot(g, self.layers[2].w.T) * (1 + self.layers[1].z) * (1 - self.layers[1].z)
 
-        self.layers[1].w -= alpha * np.dot(self.layers[0].z.T, g)
-        self.layers[1].b -= alpha * np.sum(g, axis=0)
+        # self.layers[1].w -= alpha * np.dot(self.layers[0].z.T, g)
+        # self.layers[1].b -= alpha * np.sum(g, axis=0)
 
-        g = np.dot(g, self.layers[1].w.T) * (1 + self.layers[0].z) * (1 - self.layers[0].z)
+        # g = np.dot(g, self.layers[1].w.T) * (1 + self.layers[0].z) * (1 - self.layers[0].z)
         
         self.layers[0].w -= alpha * np.dot(x.T, g)
         self.layers[0].b -= alpha * np.sum(g, axis=0) 
