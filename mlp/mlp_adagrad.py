@@ -1,9 +1,7 @@
 import numpy as np
 from numpy import ndarray
-import matplotlib.pyplot as plt
 from typing import Literal
 
-# setting random seed for reproducibility
 np.random.seed(42)
 
 class MLP:
@@ -81,7 +79,7 @@ class MLP:
         input_layer.w -= (alpha * g_w) / (np.sqrt(input_layer.g_w_sum) + 1e-8)
         input_layer.b -= (alpha * g_b) / (np.sqrt(input_layer.g_b_sum) + 1e-8)  
 
-    def train(self, x: ndarray, y: ndarray, learning_rate = 0.01, tolerated_error = 1e-8, max_epochs = 100000):
+    def train(self, x: ndarray, y: ndarray, learning_rate = 0.01, tolerated_error = 1e-8, max_epochs = 10000):
         epoch = 0
         error = float('inf')
         while error > tolerated_error and epoch < max_epochs:
@@ -92,21 +90,7 @@ class MLP:
             if epoch % 5000 == 0:
                 print(f'Epoch {epoch}, Error: {error}')
 
+        return error, epoch                
+
     def predict(self, x):
         return self.forward(x)
-                      
-x = np.linspace(0, 2 * np.pi, 100)
-t = np.sin(x)
-
-x = x.reshape((-1, 1))
-t = t.reshape((-1, 1))
-
-mlp = MLP([1, 100, 100, 1], activation="tanh")
-
-mlp.train(x, t, learning_rate=0.1)
-
-y = mlp.predict(x)
-
-plt.plot(x, t, color='blue', label='target')
-plt.plot(x, y, color='green', label='predicted')
-plt.show()
