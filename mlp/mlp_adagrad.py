@@ -17,7 +17,9 @@ class MLP:
             self.w = np.random.uniform(lower_bound, upper_bound, (n_inputs, n_outputs))                
             self.b = np.random.uniform(lower_bound, upper_bound, n_outputs)
 
-            self.z : ndarray = np.array([[]])
+            self.z = np.array([[]])
+            self.g_w_sum = np.zeros((n_inputs, n_outputs))
+            self.g_b_sum = np.zeros(n_outputs)
     
     def __init__(self, layers_sizes: list[int], activation : Literal["tanh", "softmax"] = "tanh" ):
         layers: list[MLP.Layer] = []
@@ -56,24 +58,28 @@ class MLP:
         g = output - y
 
         for i in range(len(self.layers) -1, 0, -1):
-            self.layers[i].w -= alpha * np.dot(self.layers[i - 1].z.T, g)
-            self.layers[i].b -= alpha * np.sum(g, axis=0)
+            layer = self.layers[i]
+            prev_layer = self.layers[i - 1]
+            g_w = np.dot(prev_layer.z.T, g)
+            g_b = np.sum(g, axis=0)
 
-            g = np.dot(g, self.layers[i].w.T) * self.d_act_fn(self.layers[i - 1].z)
+            layer.g_w_sum += g_w ** 2
+            layer.g_b_sum += g_b ** 2
+            
+            layer.w -= (alpha * g_w) / (np.sqrt(layer.g_w_sum) + 1e-8)
+            layer.b -= (alpha * g_b) / (np.sqrt(layer.g_b_sum) + 1e-8)
+
+            g = np.dot(g, layer.w.T) * self.d_act_fn(prev_layer.z)
+
+        input_layer = self.layers[0]
+        g_w = np.dot(x.T, g)
+        g_b = np.sum(g, axis=0)  
+
+        input_layer.g_w_sum += g_w ** 2
+        input_layer.g_b_sum += g_b ** 2
         
-        # self.layers[2].w -= alpha * np.dot(self.layers[1].z.T, g)
-        # self.layers[2].b -= alpha * np.sum(g, axis=0) 
-        # 0.0013497964524862751 -> 0.0013470893762627897
-
-        # g = np.dot(g, self.layers[2].w.T) * (1 + self.layers[1].z) * (1 - self.layers[1].z)
-
-        # self.layers[1].w -= alpha * np.dot(self.layers[0].z.T, g)
-        # self.layers[1].b -= alpha * np.sum(g, axis=0)
-
-        # g = np.dot(g, self.layers[1].w.T) * (1 + self.layers[0].z) * (1 - self.layers[0].z)
-        
-        self.layers[0].w -= alpha * np.dot(x.T, g)
-        self.layers[0].b -= alpha * np.sum(g, axis=0) 
+        input_layer.w -= (alpha * g_w) / (np.sqrt(input_layer.g_w_sum) + 1e-8)
+        input_layer.b -= (alpha * g_b) / (np.sqrt(input_layer.g_b_sum) + 1e-8)  
 
     def train(self, x: ndarray, y: ndarray, learning_rate = 0.01, tolerated_error = 1e-8, max_epochs = 100000):
         epoch = 0
