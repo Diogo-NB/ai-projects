@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import ndarray
 import matplotlib.pyplot as plt
+from typing import Literal
 
 # setting random seed for reproducibility
 np.random.seed(42)
@@ -18,7 +19,7 @@ class MLP:
 
             self.z : ndarray = np.array([[]])
     
-    def __init__(self, layers_sizes: list[int]):
+    def __init__(self, layers_sizes: list[int], activation : Literal["tanh", "softmax"] = "tanh" ):
         layers: list[MLP.Layer] = []
 
         for i in range(len(layers_sizes) - 1):
@@ -27,15 +28,19 @@ class MLP:
 
         self.layers = layers
 
-    def print_weigths(self):
+        if activation == "tanh":
+            self.act_fn = lambda x: np.tanh(x)
+            self.d_act_fn = lambda x: (1 + x) * (1 - x)
+        elif activation == "softmax":
+            self.act_fn = lambda x: np.exp(x) / np.sum(np.exp(x), axis=0)
+            self.d_act_fn = lambda x: x * (1 - x)
+
+    def print_parameters(self):
         for i, layer in enumerate(self.layers):
             print(f'Layer {i + 1}')
             print(f'Weights: {layer.w}')
             print(f'Biases: {layer.b}')
             print()
-
-    def act_fn(self, x) -> ndarray:
-        return np.tanh(x)
     
     def forward(self, x: ndarray) -> ndarray:
         layers = self.layers
@@ -54,10 +59,11 @@ class MLP:
             self.layers[i].w -= alpha * np.dot(self.layers[i - 1].z.T, g)
             self.layers[i].b -= alpha * np.sum(g, axis=0)
 
-            g = np.dot(g, self.layers[i].w.T) * (1 + self.layers[i - 1].z) * (1 - self.layers[i - 1].z)
+            g = np.dot(g, self.layers[i].w.T) * self.d_act_fn(self.layers[i - 1].z)
         
         # self.layers[2].w -= alpha * np.dot(self.layers[1].z.T, g)
-        # self.layers[2].b -= alpha * np.sum(g, axis=0) 0.0013497964524862751
+        # self.layers[2].b -= alpha * np.sum(g, axis=0) 
+        # 0.0013497964524862751 -> 0.0013470893762627897
 
         # g = np.dot(g, self.layers[2].w.T) * (1 + self.layers[1].z) * (1 - self.layers[1].z)
 
@@ -89,7 +95,7 @@ t = np.sin(x)
 x = x.reshape((-1, 1))
 t = t.reshape((-1, 1))
 
-mlp = MLP([1, 50, 50, 1])
+mlp = MLP([1, 50, 50, 1], activation="tanh")
 
 mlp.train(x, t, learning_rate=0.001)
 
