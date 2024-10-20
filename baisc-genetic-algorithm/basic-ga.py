@@ -1,10 +1,13 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 class GA:
 
+    BIT_SIZE = 10 # <= 16
+
     @staticmethod
     def mutate(cr):
-        r = np.random.randint(0, 9)  
+        r = np.random.randint(0, GA.BIT_SIZE)  
 
         mask : np.uint16 = 1 << r           
 
@@ -52,10 +55,10 @@ class GA:
         return selection
 
     @staticmethod
-    def find_max(f, n_pop, p_mut = 0.05, min_repeats_count = 50):
+    def find_x(f, n_pop, p_mut = 0.05, min_repeats_count = 50):
         epochs = 0
 
-        pop = np.random.randint(0, 512, size=n_pop, dtype=np.uint16)
+        pop = np.random.randint(0, 2 ** GA.BIT_SIZE, size=n_pop, dtype=np.uint16)
 
         best_individual = pop[0]
 
@@ -105,8 +108,18 @@ class GA:
 g = lambda x: - np.abs(x * np.sin(np.sqrt(np.abs(x))))
 f = lambda x: - g(x)
 
+g = lambda x: - ((x - 512.0) / 100.0 ) ** 2 + 100.0
+f = lambda x: g(x)
+
 n = 100 # population size
 
-x = GA.find_max(f, n)
+x = GA.find_x(f, n)
 
 print(f" {x=} {g(x)=}")
+
+t = np.linspace(0, 1024, 1024 * 2)
+y = g(t)
+
+plt.plot(t, y, color='black')
+plt.scatter(x, g(x), color='red')
+plt.show()
