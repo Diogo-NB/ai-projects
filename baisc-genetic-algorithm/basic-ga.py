@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 class GA:
 
-    BIT_SIZE = 10 # <= 16
+    BIT_SIZE = 9 # <= 16
 
     @staticmethod
     def mutate(cr):
@@ -108,8 +108,8 @@ class GA:
 g = lambda x: - np.abs(x * np.sin(np.sqrt(np.abs(x))))
 f = lambda x: - g(x)
 
-g = lambda x: - ((x - 512.0) / 100.0 ) ** 2 + 100.0
-f = lambda x: g(x)
+# g = lambda x: - ((x - 512.0) / 100.0 ) ** 2 + 100.0
+# f = lambda x: g(x)
 
 n = 100 # population size
 
