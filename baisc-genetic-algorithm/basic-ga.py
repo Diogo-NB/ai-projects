@@ -2,6 +2,7 @@ import numpy as np
 
 class GA:
 
+    @staticmethod
     def mutate(cr):
         r = np.random.randint(0, 9)  
 
@@ -11,6 +12,7 @@ class GA:
 
         return new_cr
 
+    @staticmethod
     def crossover(cr1 : np.uint16, cr2 : np.uint16, pc : np.uint16):
         aux_b = pc
         aux_a = 65535 - pc
@@ -26,6 +28,7 @@ class GA:
 
         return new_cr1, new_cr2
 
+    @staticmethod
     def roulette_wheel_selection(f, pop, selection_size):
         f_sum = np.sum(f)
 
@@ -48,6 +51,7 @@ class GA:
 
         return selection
 
+    @staticmethod
     def find_max(f, n_pop, p_mut = 0.05, min_repeats_count = 50):
         epochs = 0
 
@@ -103,7 +107,6 @@ f = lambda x: -g(x)
 
 n = 512 # population size
 
-max = GA.find_max(f, n)
+x = GA.find_max(f, n)
 
-print(f"{max=}")
-print(f"{g(max)=}")
+print(f" {x=} {g(x)=}")
