@@ -1,106 +1,109 @@
 import numpy as np
 
-def mutate(cr):
-    r = np.random.randint(0, 9)  
+class GA:
 
-    mask : np.uint16 = 1 << r           
+    def mutate(cr):
+        r = np.random.randint(0, 9)  
 
-    new_cr : np.uint16 = cr ^ mask   
+        mask : np.uint16 = 1 << r           
 
-    return new_cr
+        new_cr : np.uint16 = cr ^ mask # XOR   
 
-def crossover(cr1 : np.uint16, cr2 : np.uint16, pc : np.uint16):
-    aux_b = pc
-    aux_a = 65535 - pc
+        return new_cr
 
-    cr1_a = cr1 & aux_a
-    cr1_b = cr1 & aux_b
+    def crossover(cr1 : np.uint16, cr2 : np.uint16, pc : np.uint16):
+        aux_b = pc
+        aux_a = 65535 - pc
 
-    cr2_a = cr2 & aux_a
-    cr2_b = cr2 & aux_b
+        cr1_a = cr1 & aux_a
+        cr1_b = cr1 & aux_b
 
-    new_cr1 = cr1_a | cr2_b
-    new_cr2 = cr2_a | cr1_b
+        cr2_a = cr2 & aux_a
+        cr2_b = cr2 & aux_b
 
-    return new_cr1, new_cr2
+        new_cr1 = cr1_a | cr2_b
+        new_cr2 = cr2_a | cr1_b
 
-def roulette_wheel_selection(f, pop, selection_size):
-    f_sum = np.sum(f)
+        return new_cr1, new_cr2
 
-    p = f / f_sum
+    def roulette_wheel_selection(f, pop, selection_size):
+        f_sum = np.sum(f)
 
-    p_acum = np.zeros_like(p)
-    p_acum[0] = p[0]
+        p = f / f_sum
 
-    for i in range(1, len(pop)):
-        p_acum[i] = p_acum[i - 1] + p[i]
+        p_acum = np.zeros_like(p)
+        p_acum[0] = p[0]
 
-    selection = []
-    for pr in np.random.uniform(0.0, 1.0, selection_size):
-        i = 0
+        for i in range(1, len(pop)):
+            p_acum[i] = p_acum[i - 1] + p[i]
 
-        while p_acum[i] < pr:
-            i+=1
+        selection = []
+        for pr in np.random.uniform(0.0, 1.0, selection_size):
+            i = 0
 
-        selection.append(pop[i]) 
+            while p_acum[i] < pr:
+                i+=1
 
-    return selection
+            selection.append(pop[i]) 
 
-def find_max(g, n_pop, p_mut = 0.05, min_repeats_count = 100):
-    epochs = 0
-    f = lambda x: -g(x)
+        return selection
 
-    pop = np.random.randint(0, 512, size=n_pop, dtype=np.uint16)
+    def find_max(f, n_pop, p_mut = 0.05, min_repeats_count = 50):
+        epochs = 0
 
-    best_individual = pop[0]
+        pop = np.random.randint(0, 512, size=n_pop, dtype=np.uint16)
 
-    repeats_count = 0
+        best_individual = pop[0]
 
-    print(f"{pop=}")
-    while repeats_count < min_repeats_count:
-        epochs += 1
+        repeats_count = 0
 
-        fitness : np.ndarray = f(pop)
-        prev_best_individual = best_individual
-        best_individual = max(pop, key=f)
+        print(f"{pop=}")
+        while repeats_count < min_repeats_count:
+            epochs += 1
 
-        if prev_best_individual == best_individual:
-            repeats_count += 1
-        else:
-            repeats_count = 0
+            fitness : np.ndarray = f(pop)
+            prev_best_individual = best_individual
+            best_individual = max(pop, key=f)
 
-        pop = roulette_wheel_selection(fitness, pop, n_pop)
+            if prev_best_individual == best_individual:
+                repeats_count += 1
+            else:
+                repeats_count = 0
 
-        pc = int(np.floor(np.random.uniform(0.05, 0.51)))
+            pop = GA.roulette_wheel_selection(fitness, pop, n_pop)
 
-        next_pop = []
-        for i in range(0, len(pop), 2):
-            parent1 = pop[i]
-            parent2 = pop[i + 1]
+            pc = int(np.floor(np.random.uniform(0.05, 0.51)))
 
-            child1, child2 = crossover(parent1, parent2, pc)
+            next_pop = []
+            for i in range(0, len(pop), 2):
+                parent1 = pop[i]
+                parent2 = pop[i + 1]
 
-            if np.random.random() <= p_mut:
-                child1 = mutate(child1)
-            if np.random.random() <= p_mut:
-                child2 = mutate(child2) 
+                child1, child2 = GA.crossover(parent1, parent2, pc)
 
-            next_pop.append(child1)
-            next_pop.append(child2)  
+                if np.random.random() <= p_mut:
+                    child1 = GA.mutate(child1)
+                if np.random.random() <= p_mut:
+                    child2 = GA.mutate(child2) 
 
-        pop = np.array(next_pop, dtype=np.uint16)
+                next_pop.append(child1)
+                next_pop.append(child2)  
 
-        print(f"{best_individual=}")
-        pop[0] = best_individual
+            pop = np.array(next_pop, dtype=np.uint16)
 
-    print(pop)
+            print(f"{best_individual=}")
+            pop[0] = best_individual
 
-    return best_individual
+        print(pop)
 
-
+        return best_individual
+    
 g = lambda x: - np.abs(x * np.sin(np.sqrt(np.abs(x))))
+f = lambda x: -g(x)
+
 n = 512 # population size
 
-max = find_max(g, n)
+max = GA.find_max(f, n)
 
 print(f"{max=}")
+print(f"{g(max)=}")
