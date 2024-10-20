@@ -98,14 +98,14 @@ class GA:
             print(f"{best_individual=}")
             pop[0] = best_individual
 
-        print(pop)
+        print(f"{pop=}")
 
         return best_individual
     
 g = lambda x: - np.abs(x * np.sin(np.sqrt(np.abs(x))))
-f = lambda x: -g(x)
+f = lambda x: - g(x)
 
-n = 512 # population size
+n = 100 # population size
 
 x = GA.find_max(f, n)
 
