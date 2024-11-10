@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 class GA:
 
-    BIT_SIZE = 9 # <= 16
+    BIT_SIZE = 11 # <= 16
 
     @staticmethod
     def mutate(cr):
@@ -16,7 +16,9 @@ class GA:
         return new_cr
 
     @staticmethod
-    def crossover(cr1 : np.uint16, cr2 : np.uint16, pc : np.uint16):
+    def crossover(cr1 : np.uint16, cr2 : np.uint16):
+        pc = int(np.floor(np.random.uniform(0.05, 0.51)))
+        
         aux_b = pc
         aux_a = 65535 - pc
 
@@ -32,26 +34,10 @@ class GA:
         return new_cr1, new_cr2
 
     @staticmethod
-    def roulette_wheel_selection(f, pop, selection_size):
+    def roulette_wheel_selection(f, pop, size):
         f_sum = np.sum(f)
-
-        p = f / f_sum
-
-        p_acum = np.zeros_like(p)
-        p_acum[0] = p[0]
-
-        for i in range(1, len(pop)):
-            p_acum[i] = p_acum[i - 1] + p[i]
-
-        selection = []
-        for pr in np.random.uniform(0.0, 1.0, selection_size):
-            i = 0
-
-            while p_acum[i] < pr:
-                i+=1
-
-            selection.append(pop[i]) 
-
+        prob = f / f_sum
+        selection = np.random.choice(pop, size, p=prob)
         return selection
 
     @staticmethod
@@ -79,14 +65,12 @@ class GA:
 
             pop = GA.roulette_wheel_selection(fitness, pop, n_pop)
 
-            pc = int(np.floor(np.random.uniform(0.05, 0.51)))
-
             next_pop = []
             for i in range(0, len(pop), 2):
                 parent1 = pop[i]
                 parent2 = pop[i + 1]
 
-                child1, child2 = GA.crossover(parent1, parent2, pc)
+                child1, child2 = GA.crossover(parent1, parent2)
 
                 if np.random.random() <= p_mut:
                     child1 = GA.mutate(child1)
@@ -98,10 +82,10 @@ class GA:
 
             pop = np.array(next_pop, dtype=np.uint16)
 
-            print(f"{best_individual=}")
-            pop[0] = best_individual
+            # print(f"{best_individual=}")
+            # pop[0] = best_individual
 
-        print(f"{pop=}")
+        print(f"Epochs: {epochs}")
 
         return best_individual
     
@@ -115,9 +99,9 @@ n = 100 # population size
 
 x = GA.find_x(f, n)
 
-print(f" {x=} {g(x)=}")
+max_x = 2 ** GA.BIT_SIZE
 
-t = np.linspace(0, 1024, 1024 * 2)
+t = np.linspace(0, max_x, max_x * 3)
 y = g(t)
 
 plt.plot(t, y, color='black')
