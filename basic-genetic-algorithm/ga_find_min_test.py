@@ -22,8 +22,16 @@ if (__name__ == '__main__'):
             cr1 : np.uint16 = self.value
             cr2 : np.uint16 = other.value
 
-            pc = int(np.floor(np.random.uniform(0.05, 0.51)))
+            pc1 = int(np.floor(np.random.uniform(0.05, 0.51)))
+            pc2 = int(np.floor(np.random.uniform(0.50, 0.95)))
 
+            cr1, cr2 = self.__crossover__(cr1, cr2, pc1)
+            cr1, cr2 = self.__crossover__(cr1, cr2, pc2)
+
+            return MyChromosome(cr1), MyChromosome(cr2)
+        
+        @staticmethod
+        def __crossover__(cr1 : np.uint16, cr2 : np.uint16, pc : int) -> tuple[np.uint16, np.uint16]:
             aux_b = pc
             aux_a = 65535 - pc
 
@@ -36,7 +44,7 @@ if (__name__ == '__main__'):
             new_cr1 = cr1_a | cr2_b
             new_cr2 = cr2_a | cr1_b
 
-            return MyChromosome(new_cr1), MyChromosome(new_cr2)
+            return new_cr1, new_cr2    
         
         def mutate(self) -> None:
             r = np.random.randint(0, self.BIT_SIZE)  
