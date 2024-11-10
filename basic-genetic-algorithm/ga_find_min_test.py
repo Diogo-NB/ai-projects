@@ -9,7 +9,7 @@ if (__name__ == '__main__'):
     g = lambda x: - np.abs(x * np.sin(np.sqrt(np.abs(x))))
     f = lambda x: - g(x)
 
-    n = 100 # population size
+    n = 125 # population size
 
     class MyChromosome(Chromosome):
 
@@ -98,9 +98,8 @@ if (__name__ == '__main__'):
     y = g(t)
 
     plt.plot(t, y, color='black')
-    description = f"Mutation probability: {mut_prob * 100}%\nGenerations: {generations}"
+    description = f"Population Size: {n} | Mutation probability: {mut_prob * 100}% | Generations: {generations}"
     plt.figtext(0.5, -0.05, description, ha='center', fontsize=10)
     plt.legend([f"{ga}" for ga in ga_models], loc='center left', bbox_to_anchor=(1, 0.5)) 
     plt.title("GA Tests")
     plt.savefig("ga_find_min_test.png", bbox_inches='tight')
-    plt.plot(bbox_inches='tight')

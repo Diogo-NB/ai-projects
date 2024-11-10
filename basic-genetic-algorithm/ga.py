@@ -13,9 +13,13 @@ class GA:
 
     def run(self, initial_pop : list[Chromosome], generations: int, mut_prob: float):
         pop : list[Chromosome] = np.array(initial_pop, dtype=Chromosome)
+        best_result = pop[0].value
 
         for _ in range(generations):
             fitness : np.ndarray = np.array([chromosome.fitness() for chromosome in pop])
+
+            if self.elitism:
+                pop[np.argmin(fitness)].value = best_result
 
             best_result = pop[np.argmax(fitness)].value
 
@@ -35,9 +39,6 @@ class GA:
 
                 next_pop.append(child1)
                 next_pop.append(child2)
-
-            if self.elitism:
-                next_pop[0].value = best_result
 
             pop = np.array(next_pop, dtype=Chromosome)
 
