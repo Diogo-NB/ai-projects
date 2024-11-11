@@ -14,6 +14,7 @@ if (__name__ == '__main__'):
     class MyChromosome(Chromosome):
 
         BIT_SIZE = 10 # <= 16
+        DOUBLE_CUTOFF = True
 
         def __init__(self, value: np.uint16):
             super().__init__(value)
@@ -23,10 +24,11 @@ if (__name__ == '__main__'):
             cr2 : np.uint16 = other.value
 
             pc1 = int(np.floor(np.random.uniform(0.05, 0.51)))
-            pc2 = int(np.floor(np.random.uniform(0.50, 0.95)))
-
             cr1, cr2 = self.__crossover__(cr1, cr2, pc1)
-            cr1, cr2 = self.__crossover__(cr1, cr2, pc2)
+
+            if self.DOUBLE_CUTOFF:
+                pc2 = int(np.floor(np.random.uniform(0.50, 0.95)))
+                cr1, cr2 = self.__crossover__(cr1, cr2, pc2)
 
             return MyChromosome(cr1), MyChromosome(cr2)
         
@@ -66,11 +68,11 @@ if (__name__ == '__main__'):
     pop = [MyChromosome(x) for x in pop]
 
     ga_models = [
-        GA(RouletteWheel(25)),
+        GA(RouletteWheel(15)),
         GA(RouletteWheel(50)),
-        GA(Tournament(25, 10)),
+        GA(Tournament(15, 10)),
         GA(Tournament(50, 10)),
-        GA(Tournament(25, 10), elitism=True),
+        GA(Tournament(15, 10), elitism=True),
         GA(Tournament(50, 10), elitism=True),
     ]
 
@@ -102,4 +104,8 @@ if (__name__ == '__main__'):
     plt.figtext(0.5, -0.05, description, ha='center', fontsize=10)
     plt.legend([f"{ga}" for ga in ga_models], loc='center left', bbox_to_anchor=(1, 0.5)) 
     plt.title("GA Tests")
-    plt.savefig("ga_find_min_test.png", bbox_inches='tight')
+    cutofftype = 'singlecut'
+    if MyChromosome.DOUBLE_CUTOFF:
+        cutofftype = 'doublecut'
+
+    plt.savefig(f"ga_test_{MyChromosome.BIT_SIZE}bits_{cutofftype}.png", bbox_inches='tight')
