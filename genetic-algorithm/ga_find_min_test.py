@@ -2,7 +2,6 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 from selection_methods import RouletteWheel, Tournament
-from individual import Individual
 from ga import GA
 
 tests_results_dir = 'tests_results'
@@ -13,7 +12,7 @@ if (__name__ == '__main__'):
 
     n = 125 # population size
 
-    class IntegerIndividual(Individual):
+    class IntegerIndividual(GA.Individual):
 
         BIT_SIZE = 10 # <= 16
         DOUBLE_CUTOFF = True
@@ -74,8 +73,6 @@ if (__name__ == '__main__'):
         GA(RouletteWheel(50)),
         GA(Tournament(15, 10)),
         GA(Tournament(50, 10)),
-        GA(Tournament(15, 10), elitism=True),
-        GA(Tournament(50, 10), elitism=True),
     ]
 
     colors = [
@@ -87,7 +84,7 @@ if (__name__ == '__main__'):
         'brown'
     ]
 
-    generations = 5000
+    generations = 1500
     mut_prob = 0.05
 
     for i, ga in enumerate(ga_models):

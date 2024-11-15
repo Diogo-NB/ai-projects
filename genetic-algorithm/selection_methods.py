@@ -6,12 +6,15 @@ def roulette_wheel_selection(f, pop, size):
     selection = np.random.choice(pop, size, p=prob)
     return selection
 
-def tournament_selection(f, pop, size, k):
+def __tournament_selection__(f, pop, size, k):
     pop_size = len(pop)
     for i in range(size):
         indices = np.random.choice(pop_size, k)
         winner = roulette_wheel_selection(f[indices], pop[indices], 1)[0]
         yield winner  
+
+def tournament_selection(f, pop, size, k):
+    return list(__tournament_selection__(f, pop, size, k))
 
 class SelectionMethod:
 
@@ -39,7 +42,7 @@ class Tournament(SelectionMethod):
         self.k = k
     
     def select(self, f, pop):
-        return np.array(list(tournament_selection(f, pop, self.size, self.k)))
+        return np.array(tournament_selection(f, pop, self.size, self.k))
     
     def __str__(self):
         return f"Tournament: size: {self.size}, k: {self.k}"
