@@ -1,6 +1,6 @@
 import numpy as np
-from ga_selection_methods import SelectionMethod
-from ga_chromosome import Chromosome
+from selection_methods import SelectionMethod
+from individual import Individual
 
 class GA:
 
@@ -11,21 +11,21 @@ class GA:
     def __str__(self):
         return f"GA[selection: {self.selection}, elitism: {self.elitism}]"
 
-    def run(self, initial_pop : list[Chromosome], generations: int, mut_prob: float):
-        pop : list[Chromosome] = np.array(initial_pop, dtype=Chromosome)
+    def run(self, initial_pop : list[Individual], generations: int, mut_prob: float):
+        pop : list[Individual] = np.array(initial_pop, dtype=Individual)
         best_result = pop[0].value
 
         for _ in range(generations):
-            fitness : np.ndarray = np.array([chromosome.fitness() for chromosome in pop])
+            fitness : np.ndarray = np.array([Individual.fitness() for Individual in pop])
 
             if self.elitism:
                 pop[np.argmin(fitness)].value = best_result
 
             best_result = pop[np.argmax(fitness)].value
 
-            selected : list[Chromosome] = self.selection.select(fitness, pop)
+            selected : list[Individual] = self.selection.select(fitness, pop)
 
-            next_pop : list[Chromosome] = []
+            next_pop : list[Individual] = []
 
             for i in range(0, len(pop), 2):
                 parent1, parent2 = np.random.choice(selected, 2, replace=False)
@@ -40,6 +40,6 @@ class GA:
                 next_pop.append(child1)
                 next_pop.append(child2)
 
-            pop = np.array(next_pop, dtype=Chromosome)
+            pop = np.array(next_pop, dtype=Individual)
 
         return pop[np.argmax(fitness)].value

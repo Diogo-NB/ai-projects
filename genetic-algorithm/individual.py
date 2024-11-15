@@ -1,6 +1,4 @@
-import numpy as np
-
-class Chromosome:
+class Individual:
 
     def __init__(self, value):
         self.value = value

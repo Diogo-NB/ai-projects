@@ -1,9 +1,11 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
-from ga_selection_methods import RouletteWheel, Tournament
-from ga_chromosome import Chromosome
+from selection_methods import RouletteWheel, Tournament
+from individual import Individual
 from ga import GA
+
+tests_results_dir = 'tests_results'
 
 if (__name__ == '__main__'):
     g = lambda x: - np.abs(x * np.sin(np.sqrt(np.abs(x))))
@@ -11,7 +13,7 @@ if (__name__ == '__main__'):
 
     n = 125 # population size
 
-    class MyChromosome(Chromosome):
+    class IntegerIndividual(Individual):
 
         BIT_SIZE = 10 # <= 16
         DOUBLE_CUTOFF = True
@@ -30,7 +32,7 @@ if (__name__ == '__main__'):
                 pc2 = int(np.floor(np.random.uniform(0.50, 0.95)))
                 cr1, cr2 = self.__crossover__(cr1, cr2, pc2)
 
-            return MyChromosome(cr1), MyChromosome(cr2)
+            return IntegerIndividual(cr1), IntegerIndividual(cr2)
         
         @staticmethod
         def __crossover__(cr1 : np.uint16, cr2 : np.uint16, pc : int) -> tuple[np.uint16, np.uint16]:
@@ -63,9 +65,9 @@ if (__name__ == '__main__'):
         def __str__(self):
             return f'ShortInteger: value: {self.value}'
         
-    pop = np.random.randint(0, 2 ** MyChromosome.BIT_SIZE, size=n, dtype=np.uint16)
+    pop = np.random.randint(0, 2 ** IntegerIndividual.BIT_SIZE, size=n, dtype=np.uint16)
 
-    pop = [MyChromosome(x) for x in pop]
+    pop = [IntegerIndividual(x) for x in pop]
 
     ga_models = [
         GA(RouletteWheel(15)),
@@ -85,7 +87,7 @@ if (__name__ == '__main__'):
         'brown'
     ]
 
-    generations = 500
+    generations = 5000
     mut_prob = 0.05
 
     for i, ga in enumerate(ga_models):
@@ -94,7 +96,7 @@ if (__name__ == '__main__'):
         print(f" {x=} {g(x)=}")
         plt.scatter(x, g(x), color=colors[i])
 
-    max_x = 2 ** MyChromosome.BIT_SIZE
+    max_x = 2 ** IntegerIndividual.BIT_SIZE
 
     t = np.linspace(0, max_x, max_x * 4)
     y = g(t)
@@ -105,7 +107,8 @@ if (__name__ == '__main__'):
     plt.legend([f"{ga}" for ga in ga_models], loc='center left', bbox_to_anchor=(1, 0.5)) 
     plt.title("GA Tests")
     cutofftype = 'singlecut'
-    if MyChromosome.DOUBLE_CUTOFF:
+    if IntegerIndividual.DOUBLE_CUTOFF:
         cutofftype = 'doublecut'
 
-    plt.savefig(f"ga_test_{MyChromosome.BIT_SIZE}bits_{cutofftype}.png", bbox_inches='tight')
+    plt.savefig(f"{tests_results_dir}/find_min_{IntegerIndividual.BIT_SIZE}bits_{cutofftype}.png", bbox_inches='tight')
+    
