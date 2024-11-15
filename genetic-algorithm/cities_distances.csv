@@ -1,0 +1,11 @@
+Cidade,Uberlândia,Uberaba,Araguari,Ituiutaba,Patos de Minas,Frutal,Araxá,Monte Carmelo,Tupaciguara,Campina Verde
+Uberlândia,0.0,106.0,30.0,138.0,190.0,,175.0,89.0,56.0,
+Uberaba,106.0,0.0,,,265.0,105.0,110.0,,,160.0
+Araguari,30.0,,0.0,117.0,221.0,,205.0,66.0,47.0,
+Ituiutaba,138.0,,117.0,0.0,,265.0,,163.0,,186.0
+Patos de Minas,190.0,265.0,221.0,,0.0,,137.0,114.0,,
+Frutal,,105.0,,265.0,,0.0,185.0,,,75
+Araxá,175.0,110.0,205.0,,137.0,185.0,0.0,145,,
+Monte Carmelo,89.0,,66.0,163.0,114.0,,145.0,0.0,111.0,
+Tupaciguara,56.0,,47.0,,,,,111,0,
+Campina Verde,,160.0,,186.0,,75.0,,,,0
