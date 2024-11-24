@@ -20,21 +20,21 @@ class GA:
         def copy(self):
             return NotImplementedError
 
-    def __init__(self, selection: SelectionMethod, elitism: bool = False, generations: int = 1000, mut_prob: float = 0.05, crossover_rate: float = 0.5):
+    def __init__(self, selection: SelectionMethod, elitism: bool = False, generations: int = 1000, mut_rate: float = 0.05, crossover_rate: float = 0.5):
         self.selection = selection
         self.elitism = elitism
         self.generations = generations
-        self.mut_prob = mut_prob
+        self.mut_rate = mut_rate
         self.crossover_rate = crossover_rate
 
     def __str__(self):
         return f"GA[selection: {self.selection}, elitism: {self.elitism}]"
 
-    def run(self, initial_pop : list[Individual], generations: int = None, mut_prob: float = None, crossover_rate: float = None, elitism: bool = None) -> Individual:
+    def run(self, initial_pop : list[Individual], generations: int = None, mut_rate: float = None, crossover_rate: float = None, elitism: bool = None) -> Individual:
         if generations is None:
             generations = self.generations
-        if mut_prob is None:
-            mut_prob = self.mut_prob
+        if mut_rate is None:
+            mut_rate = self.mut_rate
         if crossover_rate is None:
             crossover_rate = self.crossover_rate
         if elitism is None:
@@ -45,32 +45,31 @@ class GA:
         for _ in range(generations):
             fitness : np.ndarray = np.array([ind.fitness() for ind in pop])
             best = pop[np.argmax(fitness)].copy()
-            print(f"Generation {_} - Best: {best.fitness()}")
+            print(f"Generation {_} - Best: {best}")
 
             selected = self.selection.select(fitness, pop)
 
             next_pop : list[GA.Individual] = []
 
             crossover_size = int(pop.size * crossover_rate)
-            for i in range(0, crossover_size, 2):
+            for _ in range(0, crossover_size, 2):
                 parent1, parent2 = np.random.choice(selected, 2, replace=False)
 
                 child1, child2 = parent1.crossover(parent2)
 
-                if np.random.random() <= mut_prob:
-                    child1.mutate()
-                if np.random.random() <= mut_prob:
-                    child2.mutate()
-
                 next_pop.append(child1)
                 next_pop.append(child2)
 
-            selected_carryover = np.random.choice(selected, pop.size - crossover_size)
-            pop = np.concatenate((selected_carryover, next_pop[:crossover_size]), dtype=GA.Individual)
+            mutation_selected = np.random.choice(selected, int(pop.size * mut_rate))
+            for ind in mutation_selected:
+                ind.mutate()
+
+            carryover = np.random.choice(selected, pop.size - crossover_size)
+            pop = np.concatenate((carryover, next_pop[:crossover_size]), dtype=GA.Individual)
 
             if elitism:
                 pop[np.random.randint(pop.size)] = best
 
-        print('Final fitness results:', [ind.fitness() for ind in pop])
+        print(pop)
 
         return best

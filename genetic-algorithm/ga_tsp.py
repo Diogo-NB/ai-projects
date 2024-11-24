@@ -7,7 +7,8 @@ from selection_methods import RouletteWheel, Tournament
 np.random.seed(222)
 
 df = pandas.read_csv('cities_distances.csv', index_col='Cidade')
-df = df.replace(np.nan, 10000)
+invalid_path_size = np.finfo(np.float32).max
+df = df.replace(np.nan, invalid_path_size)
 
 cities = df.index
 available_cities = cities.drop('Uberaba')
@@ -25,32 +26,39 @@ class Path(GA.Individual):
 
     def fitness(self) -> float:
         if self._fitness is  None:
-            fit = [(self.value[i], self.value[i+1]) for i in range(self.value.size - 1)]
-            fit.insert(0, ('Uberaba', self.value[0]))
-            fit = [df.loc[fit[i]] for i in range(len(fit))]
-            self._fitness = - np.sum(fit)
+            cities_pairs = [(self.value[i], self.value[i+1]) for i in range(self.value.size - 1)]
+            cities_pairs.insert(0, ('Uberaba', self.value[0]))
+            fitness = [df.loc[cities_pair] for cities_pair in cities_pairs]
+           
+            self._fitness = - np.min([np.sum(fitness), invalid_path_size])
+
         return self._fitness
 
     def crossover(self, other: GA.Individual) -> tuple:
-        # n = self.value.size
-        # pc1 = np.random.randint(int(n *0.05), int(n * 0.51)) + 1
-        # child1_value, child2_value = self.__crossover__(self.value, other.value, pc1)
-        child1_value, child2_value = my_order_crossover(self.value, other.value)
-        # child1_value, child2_value = order_crossover(self.value, other.value)
+        n = self.value.size
+        
+        pcs = sorted(np.random.choice(n, 2, replace=False)) # pc1, pc2
+
+        child1_value, child2_value = self.__paths_crossover__(self.value, other.value, pcs)
 
         return Path(child1_value), Path(child2_value)
+
+    @staticmethod
+    def __paths_crossover__(path1 : np.ndarray, path2 : np.ndarray, pcs: tuple[int]) -> tuple:
+        pc1, pc2 = pcs
+        new_path1 = path1[pc1:pc2]
+        new_path2 = path2[pc1:pc2]
+
+        path1_aux = [city for city in path1 if city not in new_path2]
+        path2_aux = [city for city in path2 if city not in new_path1]
+        
+        new_path1 = np.concatenate((path2_aux[:pc1], new_path1, path2_aux[pc1:]))
+        new_path2 = np.concatenate((path1_aux[:pc1], new_path2, path1_aux[pc1:]))
+
+        return new_path1, new_path2
     
     def copy(self):
         return Path(np.copy(self.value))
-
-    @staticmethod
-    def __crossover__(path1 : np.ndarray, path2 : np.ndarray, pc : int) -> tuple:
-        new_path1 : np.ndarray = path1[:pc]
-        new_path1 = np.concatenate((new_path1, [city for city in path2 if city not in new_path1]))
-
-        new_path2 : np.ndarray = path2[:pc]
-        new_path2 = np.concatenate((new_path2, [city for city in path1 if city not in new_path2])) 
-        return new_path1, new_path2
 
     def mutate(self) -> None:
         i, j = np.random.choice(self.value.size, 2, replace=False)
@@ -58,7 +66,12 @@ class Path(GA.Individual):
         self._fitness = None
     
     def __str__(self):
-        return f'{self.value} - Fitness: {self.fitness()}'
+        fitness = - self.fitness()
+
+        if fitness >= invalid_path_size:
+            return 'Invalid Path'
+
+        return f'{fitness}'
     
     def __repr__(self):
         return self.__str__()
@@ -66,5 +79,5 @@ class Path(GA.Individual):
 pop_size = 200
 initial_pop = [Path.random() for _ in range(pop_size)]
 
-ga = GA(Tournament(150, 50), elitism=True, generations=1000, mut_prob=0.1, crossover_rate=0.75)
+ga = GA(Tournament(150, 5), elitism=True, generations=750, mut_rate=0.2, crossover_rate=0.5)
 best = ga.run(initial_pop)
