@@ -47,7 +47,9 @@ class GA:
         for _ in range(generations):
             fitness : np.ndarray = np.array([ind.fitness() for ind in pop])
             best = pop[np.argmax(fitness)].copy()
-            print(f"Generation {_} - Best: {best}")
+
+            if _ % 100 == 0:
+                print(f"Generation {_} - Best: {best}")
 
             selected = self.selection.select(fitness, pop)
 

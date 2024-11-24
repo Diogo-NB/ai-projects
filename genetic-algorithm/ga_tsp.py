@@ -74,11 +74,10 @@ class Path(GA.Individual):
     
 pop_size = 125
 create_pop = lambda: [Path.random() for _ in range(pop_size)]
-initial_populations = [create_pop() for _ in range(3)]
 
-ga = GA(RouletteWheel(90), elitism=True, generations=333, mut_rate=0.1, crossover_rate=0.75)
-# best = ga.run(initial_pop)
-best = ga.multi_run(initial_populations, epochs=3, carryover_rate=0.1)
+ga = GA(RouletteWheel(90), elitism=True, generations=222, mut_rate=0.1, crossover_rate=0.75)
+# best = ga.run(create_pop(), generations=2000)
+best = ga.multi_run([create_pop() for _ in range(3)], epochs=3, carryover_rate=0.1)
 cities_list = np.concatenate((['Uberaba'], best.value))
 cities_pairs = [(cities_list[i], cities_list[i+1]) for i in range(cities_list.size - 1)]
 
