@@ -60,6 +60,9 @@ if (__name__ == '__main__'):
 
         def fitness(self) -> float:
             return f(self.value)
+        
+        def copy(self):
+            return IntegerIndividual(self.value)
             
         def __str__(self):
             return f'ShortInteger: value: {self.value}'
@@ -88,7 +91,7 @@ if (__name__ == '__main__'):
     mut_prob = 0.05
 
     for i, ga in enumerate(ga_models):
-        x = ga.run(pop, generations, mut_prob)
+        x = ga.run(pop, generations, mut_prob).value
 
         print(f" {x=} {g(x)=}")
         plt.scatter(x, g(x), color=colors[i])
