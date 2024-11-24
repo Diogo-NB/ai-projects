@@ -72,9 +72,9 @@ if (__name__ == '__main__'):
     pop = [IntegerIndividual(x) for x in pop]
 
     ga_models = [
-        GA(RouletteWheel(15)),
+        # GA(RouletteWheel(15)),
         GA(RouletteWheel(50)),
-        GA(Tournament(15, 10)),
+        # GA(Tournament(15, 10)),
         GA(Tournament(50, 10)),
     ]
 
@@ -87,7 +87,7 @@ if (__name__ == '__main__'):
         'brown'
     ]
 
-    generations = 1500
+    generations = 500
     mut_prob = 0.05
 
     for i, ga in enumerate(ga_models):

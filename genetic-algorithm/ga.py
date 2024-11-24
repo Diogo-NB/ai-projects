@@ -49,7 +49,7 @@ class GA:
 
             selected = self.selection.select(fitness, pop)
 
-            next_pop : list[GA.Individual] = []
+            children : list[GA.Individual] = []
 
             crossover_size = int(pop.size * crossover_rate)
             for _ in range(0, crossover_size, 2):
@@ -57,15 +57,15 @@ class GA:
 
                 child1, child2 = parent1.crossover(parent2)
 
-                next_pop.append(child1)
-                next_pop.append(child2)
+                children.append(child1)
+                children.append(child2)
 
-            mutation_selected = np.random.choice(selected, int(pop.size * mut_rate))
+            carryover_size = pop.size - crossover_size
+            pop = np.concatenate((selected[-carryover_size:], children[:crossover_size]), dtype=GA.Individual)
+
+            mutation_selected = np.random.choice(pop, int(pop.size * mut_rate), replace=False)
             for ind in mutation_selected:
                 ind.mutate()
-
-            carryover = np.random.choice(selected, pop.size - crossover_size)
-            pop = np.concatenate((carryover, next_pop[:crossover_size]), dtype=GA.Individual)
 
             if elitism:
                 pop[np.random.randint(pop.size)] = best

@@ -1,10 +1,7 @@
 import pandas
 import numpy as np
 from ga import GA
-from ga_tsp_crossovers import order_crossover, pmx_crossover, my_order_crossover
-from selection_methods import RouletteWheel, Tournament
-
-np.random.seed(222)
+from selection_methods import RouletteWheel
 
 df = pandas.read_csv('cities_distances.csv', index_col='Cidade')
 invalid_path_size = np.finfo(np.float32).max
@@ -12,7 +9,6 @@ df = df.replace(np.nan, invalid_path_size)
 
 cities = df.index
 available_cities = cities.drop('Uberaba')
-print(df)
 
 class Path(GA.Individual):
 
@@ -69,15 +65,24 @@ class Path(GA.Individual):
         fitness = - self.fitness()
 
         if fitness >= invalid_path_size:
-            return 'Invalid Path'
+            return 'Invalid'
 
         return f'{fitness}'
     
     def __repr__(self):
         return self.__str__()
     
-pop_size = 200
+pop_size = 125
 initial_pop = [Path.random() for _ in range(pop_size)]
 
-ga = GA(Tournament(150, 5), elitism=True, generations=750, mut_rate=0.2, crossover_rate=0.5)
+ga = GA(RouletteWheel(90), elitism=True, generations=1000, mut_rate=0.1, crossover_rate=0.75)
 best = ga.run(initial_pop)
+cities_list = np.concatenate((['Uberaba'], best.value))
+cities_pairs = [(cities_list[i], cities_list[i+1]) for i in range(cities_list.size - 1)]
+
+distances = [df.loc[cities_pair] for cities_pair in cities_pairs]
+
+for i, distance in enumerate(distances):
+    print(f'{cities_pairs[i]}: {distance}')
+
+print(f'Best path: {best.value} length: {-best.fitness()}')
