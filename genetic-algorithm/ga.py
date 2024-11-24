@@ -1,5 +1,7 @@
+from typing import Union
 import numpy as np
 from selection_methods import SelectionMethod
+from concurrent.futures import ThreadPoolExecutor
 
 class GA:
 
@@ -30,7 +32,7 @@ class GA:
     def __str__(self):
         return f"GA[selection: {self.selection}, elitism: {self.elitism}]"
 
-    def run(self, initial_pop : list[Individual], generations: int = None, mut_rate: float = None, crossover_rate: float = None, elitism: bool = None) -> Individual:
+    def run(self, initial_pop : list[Individual], generations: int = None, mut_rate: float = None, crossover_rate: float = None, elitism: bool = None, return_pop = False) -> Union[Individual, np.ndarray[Individual]]:
         if generations is None:
             generations = self.generations
         if mut_rate is None:
@@ -70,6 +72,33 @@ class GA:
             if elitism:
                 pop[np.random.randint(pop.size)] = best
 
-        print(pop)
+        if return_pop:
+            fitness : np.ndarray = np.array([ind.fitness() for ind in pop])
+            pop = pop[np.argsort(fitness)]
+            return pop
+
+        return best
+    
+    def multi_run(self, initial_populations : list[list[Individual]], epochs = 2, carryover_rate = 0.2) -> Individual:
+        populations = initial_populations 
+        carryover_size = int(len(populations[0]) * carryover_rate)
+        run = lambda initial_pop: self.run(initial_pop, generations=self.generations, return_pop=True)
+
+        for _ in range(epochs):
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                results = executor.map(run, populations)
+
+                populations = list(results)
+                np.random.shuffle(populations)
+                new_populations = []
+                for i in range(0, len(populations)):
+                    new_pop = np.concatenate((populations[i][-carryover_size:], populations[i - 1][:carryover_size]), dtype=GA.Individual)
+                    new_populations.append(new_pop)
+                
+        #finding the best individual from all populations
+        best = populations[0][-1]
+        for population in populations:
+            if population[-1].fitness() > best.fitness():
+                best = population[-1]
 
         return best
